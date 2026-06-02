@@ -1,0 +1,10 @@
+﻿python : Traceback (most recent call last):
+所在位置 C:\Users\TP\AppData\Local\Temp\ps-script-5580576c-d643-4ed3-aeff-16f4733acdf0.ps1:79 字符: 1
++ python -c "
++ ~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Traceback (most recent call last)::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  File "<string>", line 13, in <module>
+UnicodeEncodeError: 'gbk' codec can't encode character '\u2610' in position 703: illegal multibyte sequence
+days 84

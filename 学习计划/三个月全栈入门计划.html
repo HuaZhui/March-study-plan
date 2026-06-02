@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>三个月七方向入门计划</title>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --panel: #1a2332;
+      --panel2: #243044;
+      --text: #e7ecf3;
+      --muted: #8b9cb3;
+      --accent: #3dd6c3;
+      --accent2: #5b8def;
+      --done: #6bcb77;
+      --warn: #ffb347;
+      --border: #2d3a4f;
+      --sidebar-w: 300px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      overflow: hidden;
+    }
+    .app { display: flex; height: 100vh; }
+    .sidebar {
+      width: var(--sidebar-w);
+      min-width: var(--sidebar-w);
+      background: var(--panel);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar-head {
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sidebar-head h1 { font-size: 1rem; margin: 0 0 8px; line-height: 1.4; }
+    .progress-wrap { margin-top: 10px; }
+    .progress-bar {
+      height: 8px;
+      background: var(--panel2);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      width: 0%;
+      transition: width .3s;
+    }
+  .progress-text { font-size: 12px; color: var(--muted); margin-top: 6px; }
+    .toolbar { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .btn {
+      border: 1px solid var(--border);
+      background: var(--panel2);
+      color: var(--text);
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .btn:hover { border-color: var(--accent); }
+    .btn-primary { background: var(--accent); color: #0f1419; border-color: var(--accent); font-weight: 600; }
+    .search {
+      width: 100%;
+      margin-top: 10px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+    }
+    .day-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px;
+    }
+    .week-label {
+      font-size: 11px;
+      color: var(--accent);
+      padding: 10px 8px 4px;
+      font-weight: 600;
+      letter-spacing: .05em;
+    }
+    .day-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      border: 1px solid transparent;
+    }
+    .day-item:hover { background: var(--panel2); }
+    .day-item.active {
+      background: rgba(61, 214, 195, .15);
+      border-color: var(--accent);
+    }
+    .day-item.done .day-id { color: var(--done); }
+    .day-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--border);
+      flex-shrink: 0;
+    }
+    .day-item.done .day-dot { background: var(--done); }
+    .day-item.partial .day-dot { background: var(--warn); }
+    .day-meta { color: var(--muted); font-size: 11px; }
+    .main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 32px 48px;
+    }
+    .save-status {
+      position: fixed;
+      top: 12px;
+      right: 16px;
+      font-size: 12px;
+      color: var(--muted);
+      z-index: 10;
+    }
+    .save-status.saved { color: var(--done); }
+    .tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+    .tab {
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      font-size: 14px;
+    }
+    .tab.active { background: var(--accent); color: #0f1419; border-color: var(--accent); font-weight: 600; }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 16px;
+    }
+    .card h2 { margin: 0 0 12px; font-size: 1.1rem; color: var(--accent); }
+    .card h3 { margin: 0 0 8px; font-size: .95rem; }
+    .hero-title { font-size: 1.5rem; margin: 0 0 4px; }
+    .hero-sub { color: var(--muted); margin-bottom: 20px; }
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+    .tag {
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: var(--panel2);
+      color: var(--muted);
+    }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 900px) {
+      .grid-2 { grid-template-columns: 1fr; }
+      .app { flex-direction: column; }
+      .sidebar { width: 100%; min-width: 0; max-height: 40vh; }
+    }
+    .field-label { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+    .field-value { line-height: 1.6; white-space: pre-wrap; }
+    a { color: var(--accent2); }
+    .record-section label { display: block; font-size: 13px; color: var(--muted); margin: 12px 0 6px; }
+    select, input[type="number"], textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 14px;
+    }
+    textarea { min-height: 100px; resize: vertical; }
+    .checklist { list-style: none; padding: 0; margin: 0; }
+    .checklist li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist input { margin-top: 4px; width: 18px; height: 18px; accent-color: var(--accent); }
+    .log-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .log-table th, .log-table td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .log-table th { color: var(--muted); font-weight: 500; }
+    .empty { color: var(--muted); text-align: center; padding: 40px; }
+    .hidden { display: none !important; }
+    .track-bar { height: 10px; background: var(--panel2); border-radius: 5px; overflow: hidden; margin: 8px 0; }
+    .track-fill { height: 100%; background: linear-gradient(90deg, var(--accent2), var(--accent)); width: 0%; transition: width .3s; }
+    .track-row { margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+    .track-row:last-child { border-bottom: none; }
+    .track-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+    .track-name { font-weight: 600; }
+    .track-meta { font-size: 12px; color: var(--muted); }
+    .timeline { border-left: 2px solid var(--border); margin-left: 8px; padding-left: 16px; }
+    .timeline-item { margin-bottom: 16px; position: relative; }
+    .timeline-item::before {
+      content: ""; position: absolute; left: -21px; top: 6px;
+      width: 10px; height: 10px; border-radius: 50%; background: var(--accent);
+    }
+    .timeline-item.done::before { background: var(--done); }
+    .timeline-item.future::before { background: var(--border); }
+  </style>
+</head>
+<body>
+  <div class="save-status" id="saveStatus">记录将自动保存到本机浏览器</div>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sidebar-head">
+        <h1>三个月七方向入门计划</h1>
+        <div class="progress-wrap">
+          <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+          <div class="progress-text" id="progressText">进度 0/84</div>
+        </div>
+        <div class="toolbar">
+          <button class="btn btn-primary" id="btnToday">今天</button>
+          <button class="btn" id="btnExport">导出记录</button>
+          <button class="btn" id="btnImport">导入记录</button>
+        </div>
+        <input type="search" class="search" id="search" placeholder="搜索 D1、H5、Android、Cocos…" />
+      </div>
+      <div class="day-list" id="dayList"></div>
+    </aside>
+    <main class="main">
+      <div class="tabs">
+        <div class="tab active" data-tab="plan">今日学习</div>
+        <div class="tab" data-tab="progress">时间与进度</div>
+        <div class="tab" data-tab="log">学习记录总览</div>
+        <div class="tab" data-tab="help">使用说明</div>
+      </div>
+      <div id="panelPlan"></div>
+      <div id="panelProgress" class="hidden"></div>
+      <div id="panelLog" class="hidden"></div>
+      <div id="panelHelp" class="hidden"></div>
+    </main>
+  </div>
+  <input type="file" id="importFile" accept=".json" class="hidden" />
+  <script>
+    const STORAGE_KEY = "stack-fullstack-plan-v2";
+    const PLAN_DAYS = [{"序号": "D1", "日期": "2026-06-01", "星期": "周一", "周次": "W1", "阶段": "第1月·工具与读码", "模块": "环境", "今日目标": "安装 VS Code/Git/Postman/Chrome；对齐 H5 八条学习目标", "交付物（必达）": "工具可用+目标对照表", "怎么学（固定循环）": "懂 H5 在干什么→写清需求→AI 实现→浏览器/真机验收；卡住：F12 Console/Network→改 prompt→对照文档", "今日阅读章节": "H5 学习目标（8条）", "主文档（名称）": "Chrome DevTools", "主文档链接": "https://developer.chrome.com/docs/devtools", "入门教程/视频": "Cursor 使用入门 | 团队 AI Skill 说明", "怎么创建": "建 e:\\三个月速成\\learning-code；读 学习产出/web学习产出.html", "代码文件夹": "day01-intro", "上午任务": "装 VS Code/Git/Postman/Chrome", "下午任务": "抄写8条H5目标+核心理念；git init", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 工具可用 ☐ 8目标能口述", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D2", "日期": "2026-06-02", "星期": "周二", "周次": "W1", "阶段": "第1月·工具与读码", "模块": "Git", "今日目标": "push/pull；远程仓库", "交付物（必达）": "代码推到 Gitee/GitHub", "怎么学（固定循环）": "懂 H5 在干什么→写清需求→AI 实现→浏览器/真机验收；卡住：F12 Console/Network→改 prompt→对照文档", "今日阅读章节": "Pro Git 第2章", "主文档（名称）": "Pro Git", "主文档链接": "https://git-scm.com/book/zh/v2", "入门教程/视频": "菜鸟 Git", "怎么创建": "新建 day02-git", "代码文件夹": "day02-git", "上午任务": "注册远程仓；git remote", "下午任务": "push/pull 验证", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 远程可见 ☐ 会 push/pull", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D3", "日期": "2026-06-03", "星期": "周三", "周次": "W1", "阶段": "第1月·工具与读码", "模块": "MySQL", "今日目标": "安装 MySQL 或 Docker（懂后端协作）", "交付物（必达）": "能连上数据库", "怎么学（固定循环）": "懂 H5 在干什么→写清需求→AI 实现→浏览器/真机验收；卡住：F12 Console/Network→改 prompt→对照文档", "今日阅读章节": "MySQL 安装向导", "主文档（名称）": "MySQL 文档", "主文档链接": "https://dev.mysql.com/doc/", "入门教程/视频": "Docker 装 MySQL", "怎么创建": "—", "代码文件夹": "—", "上午任务": "安装 MySQL8 或 docker mysql", "下午任务": "DBeaver 连接；SHOW DATABASES", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 客户端连上 ☐ 知道 H5 不直连库", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D4", "日期": "2026-06-04", "星期": "周四", "周次": "W1", "阶段": "第1月·工具与读码", "模块": "读码", "今日目标": "读懂 HTML 页面结构（不从头写）；读懂 CSS 布局与移动适配", "交付物（必达）": "标注页面结构笔记；viewport/rem 对照笔记", "怎么学（固定循环）": "懂 H5 在干什么→写清需求→AI 实现→浏览器/真机验收；卡住：F12 Console/Network→改 prompt→对照文档", "今日阅读章节": "MDN：HTML 入门（只读） / MDN：viewport/Flex（只读）", "主文档（名称）": "MDN CSS", "主文档链接": "https://developer.mozilla.org/zh-CN/docs/Learn/CSS", "入门教程/视频": "打开 学习产出/六一儿童节.html | B站：H5 rem 适配（只看对照）", "怎么创建": "h5-read-css", "代码文件夹": "h5-read-css", "上午任务": "F12 Elements 看 DOM 树 → 找 viewport/meta 与 rem 设置", "下午任务": "标注 header/section/脚本位置 → 手机模式预览；记录适配方式", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 能指认主要区块 ☐ 知道哪是结构哪是脚本 ☐ 能说明如何适配手机宽 ☐ 能找布局代码", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D5", "日期": "2026-06-05", "星期": "周五", "周次": "W1", "阶段": "第1月·工具与读码", "模块": "读码", "今日目标": "读懂 JS 与 Network 请求链路", "交付物（必达）": "一条 API 链路图", "怎么学（固定循环）": "懂 H5 在干什么→写清需求→AI 实现→浏览器/真机验收；卡住：F12 Console/Network→改 prompt→对照文档", "今日阅读章节": "MDN：Network 面板", "主文档（名称）": "Chrome DevTools", "主文档链接": "https://developer.chrome.com/docs/devtools/network", "入门教程/视频": "—", "怎么创建": "h5-read-network", "代码文件夹": "h5-read-network", "上午任务": "F12 Network 刷新页面", "下午任务": "跟一条 XHR：请求→响应→页面变化", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 能画链路图 ☐ 会看 Status/Preview", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D6", "日期": "2026-06-08", "星期": "周一", "周次": "W1", "阶段": "第1月·工具与读码", "模块": "验收", "今日目标": "W1 工具与读码验收", "交付物（必达）": "F12+Git+MySQL+读码笔记", "怎么学（固定循环）": "懂 H5 在干什么→写清需求→AI 实现→浏览器/真机验收；卡住：F12 Console/Network→改 prompt→对照文档", "今日阅读章节": "—", "主文档（名称）": "Chrome DevTools", "主文档链接": "https://developer.chrome.com/docs/devtools", "入门教程/视频": "—", "怎么创建": "—", "代码文件夹": "day07-check", "上午任务": "自测：Elements/Network/Console", "下午任务": "git push；预习 W2 H5 专周", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ W1全过", "建议学时": 6, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D7", "日期": "2026-06-09", "星期": "周二", "周次": "W2", "阶段": "第1月·H5验收向", "模块": "H5", "今日目标": "【目标1】看懂 H5 项目目录与代码结构", "交付物（必达）": "项目目录说明文档", "怎么学（固定循环）": "懂 H5 在干什么→写清需求→AI 实现→浏览器/真机验收；卡住：F12 Console/Network→改 prompt→对照文档", "今日阅读章节": "典型 H5 目录规范", "主文档（名称）": "Vite+Vue H5 模板", "主文档链接": "https://cn.vuejs.org/guide/quick-start.html", "入门教程/视频": "npm create vite@latest h5-demo", "怎么创建": "npm create vite@latest h5-demo → e:\\三个月速成\\learning-code\\h5-demo", "代码文件夹": "h5-demo", "上午任务": "梳理 src/router/api/views 等目录", "下午任务": "对照 学习产出 说明各文件夹职责", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 能讲清目录 ☐ 项目能 npm run dev", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D8", "日期": "2026-06-10", "星期": "周三", "周次": "W2", "阶段": "第1月·H5验收向", "模块": "H5", "今日目标": "【目标2】页面打开→调接口→渲染 完整链路", "交付物（必达）": "数据流时序图/笔记", "怎么学（固定循环）": "懂 H5 在干什么→写清需求→AI 实现→浏览器/真机验收；卡住：F12 Console/Network→改 prompt→对照文档", "今日阅读章节": "Axios 请求流程", "主文档（名称）": "MDN Fetch/XHR", "主文档链接": "https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API", "入门教程/视频": "jsonplaceholder 对照", "怎么创建": "h5-demo", "代码文件夹": "h5-demo", "上午任务": "让 AI 加列表页+mock 接口", "下午任务": "F12 Network 逐步跟：DOM→JS→请求→渲染", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 链路能口述 ☐ Network 能对上", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D9", "日期": "2026-06-11", "星期": "周四", "周次": "W2", "阶段": "第1月·H5验收向", "模块": "H5", "今日目标": "【目标3】H5/后端/Native 协作边界", "交付物（必达）": "协作边界一页纸", "怎么学（固定循环）": "懂 H5 在干什么→写清需求→AI 实现→浏览器/真机验收；卡住：F12 Console/Network→改 prompt→对照文档", "今日阅读章节": "前后端职责划分", "主文档（名称）": "MDN CORS（了解）", "主文档链接": "https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CORS", "入门教程/视频": "微信 JS-SDK 文档（Native 桥）", "怎么创建": "h5-notes", "代码文件夹": "h5-notes", "上午任务": "画 H5/后端/Native 分工表", "下午任务": "写：谁提供接口/谁渲染/谁调原生", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 边界文档完成 ☐ 能答联调谁改啥", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D10", "日期": "2026-06-12", "星期": "周五", "周次": "W2", "阶段": "第1月·H5验收向", "模块": "H5", "今日目标": "【目标4】路由/组件/API封装/状态/移动适配", "交付物（必达）": "概念对照表（5项）", "怎么学（固定循环）": "懂 H5 在干什么→写清需求→AI 实现→浏览器/真机验收；卡住：F12 Console/Network→改 prompt→对照文档", "今日阅读章节": "Vue Router/Pinia/Vant", "主文档（名称）": "Vue3 中文文档", "主文档链接": "https://cn.vuejs.org/guide/introduction.html", "入门教程/视频": "Vant4 | Vue Router | Pinia", "怎么创建": "h5-demo", "代码文件夹": "h5-demo", "上午任务": "在项目中定位 router/store/api 文件", "下午任务": "让 AI 加一页路由+一个封装 request", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 五概念各能举例 ☐ 代码里能找到对应文件", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D11", "日期": "2026-06-15", "星期": "周一", "周次": "W2", "阶段": "第1月·H5验收向", "模块": "H5", "今日目标": "【目标5】浏览器/真机验收 + F12 排错", "交付物（必达）": "H5 验收清单 v1", "怎么学（固定循环）": "懂 H5 在干什么→写清需求→AI 实现→浏览器/真机验收；卡住：F12 Console/Network→改 prompt→对照文档", "今日阅读章节": "Chrome 移动端模拟", "主文档（名称）": "Chrome DevTools", "主文档链接": "https://developer.chrome.com/docs/devtools/device-mode", "入门教程/视频": "真机 USB 调试或扫码预览", "怎么创建": "h5-demo", "代码文件夹": "h5-demo", "上午任务": "写验收项：布局/点击/loading/空态", "下午任务": "Chrome 手机模式+真机各测一遍；Console 排 1 个 bug", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 验收清单可用 ☐ 会用 F12 定位问题", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D12", "日期": "2026-06-16", "星期": "周二", "周次": "W2", "阶段": "第1月·H5验收向", "模块": "H5", "今日目标": "【目标6+7】AI 代码审核 + AI 实现一页；【目标7+8】AI 工作流 + 后续计划 + W2 验收", "交付物（必达）": "审核清单+AI 实现页；8 条目标自检表+后续计划", "怎么学（固定循环）": "懂 H5 在干什么→写清需求→AI 实现→浏览器/真机验收；卡住：F12 Console/Network→改 prompt→对照文档", "今日阅读章节": "AI 代码风险点 / E2E/部署概念", "主文档（名称）": "Playwright 入门（了解）", "主文档链接": "https://playwright.dev/docs/intro", "入门教程/视频": "团队 AI Agent/Skill 流程", "怎么创建": "h5-demo", "代码文件夹": "h5-demo", "上午任务": "写 AI 代码审核 10 条（XSS/密钥/硬编码等） → 走一遍：原型→文档→AI实现→验收→部署了解", "下午任务": "提需求让 AI 做活动页→你按清单审核→改到能验收 → 8 条目标逐条打勾；写个人后续 H5 学习计划", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 审核清单完成 ☐ AI 页浏览器验收通过 ☐ 8条全过 ☐ W2验收", "建议学时": 6, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D13", "日期": "2026-06-17", "星期": "周三", "周次": "W3", "阶段": "第1月·后端Java", "模块": "Java", "今日目标": "JDK+Hello World", "交付物（必达）": "程序能运行", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "廖雪峰 Java 简介", "主文档（名称）": "廖雪峰 Java", "主文档链接": "https://liaoxuefeng.com/books/java/index.html", "入门教程/视频": "菜鸟 Java | B站：Java 零基础", "怎么创建": "IDEA 新建 java-w3", "代码文件夹": "java-w3", "上午任务": "装 JDK17+IDEA", "下午任务": "Hello World", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ Run 成功", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D14", "日期": "2026-06-18", "星期": "周四", "周次": "W3", "阶段": "第1月·后端Java", "模块": "Java", "今日目标": "变量与流程控制；循环", "交付物（必达）": "猜数字判断逻辑；猜数字可玩", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "廖雪峰 流程控制 / 廖雪峰 循环", "主文档（名称）": "廖雪峰 Java", "主文档链接": "https://liaoxuefeng.com/books/java/index.html", "入门教程/视频": "菜鸟 Java", "怎么创建": "java-w3", "代码文件夹": "java-w3", "上午任务": "数据类型 if/else → for/while", "下午任务": "Scanner 输入 → 最多7次猜中", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ if 正确 ☐ 游戏可玩", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D15", "日期": "2026-06-19", "星期": "周五", "周次": "W3", "阶段": "第1月·后端Java", "模块": "Java", "今日目标": "类与对象", "交付物（必达）": "Book 类", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "廖雪峰 面向对象", "主文档（名称）": "廖雪峰 Java", "主文档链接": "https://liaoxuefeng.com/books/java/index.html", "入门教程/视频": "菜鸟 Java", "怎么创建": "java-w3", "代码文件夹": "java-w3", "上午任务": "封装", "下午任务": "控制台菜单", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 图书类OK", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D16", "日期": "2026-06-22", "星期": "周一", "周次": "W3", "阶段": "第1月·后端Java", "模块": "Java", "今日目标": "继承与接口；集合", "交付物（必达）": "图书借还系统；学生 CRUD", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "廖雪峰 继承 / 廖雪峰 集合", "主文档（名称）": "廖雪峰 Java", "主文档链接": "https://liaoxuefeng.com/books/java/index.html", "入门教程/视频": "菜鸟 Java", "怎么创建": "java-w3", "代码文件夹": "java-w3", "上午任务": "继承/接口 → ArrayList/HashMap", "下午任务": "借还逻辑 → 增删查", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 借还通 ☐ 学生系统OK", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D17", "日期": "2026-06-23", "星期": "周二", "周次": "W3", "阶段": "第1月·后端Java", "模块": "Java", "今日目标": "异常+W3验收", "交付物（必达）": "三程序可运行", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "廖雪峰 异常", "主文档（名称）": "廖雪峰 Java", "主文档链接": "https://liaoxuefeng.com/books/java/index.html", "入门教程/视频": "—", "怎么创建": "java-w3", "代码文件夹": "java-w3", "上午任务": "try-catch", "下午任务": "push 代码", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ W3全过", "建议学时": 6, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D18", "日期": "2026-06-24", "星期": "周三", "周次": "W4", "阶段": "第1月·后端API", "模块": "MySQL", "今日目标": "建表+ER", "交付物（必达）": "shop 四表+ER图", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "CREATE TABLE", "主文档（名称）": "MySQL 文档", "主文档链接": "https://dev.mysql.com/doc/", "入门教程/视频": "SQL必知必会 | 菜鸟 SQL", "怎么创建": "Navicat 建库 sql-w4", "代码文件夹": "sql-w4", "上午任务": "CREATE TABLE", "下午任务": "测试数据", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 表建好", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D19", "日期": "2026-06-25", "星期": "周四", "周次": "W4", "阶段": "第1月·后端API", "模块": "MySQL", "今日目标": "DML+查询；JOIN+事务", "交付物（必达）": "10条 SQL 模板；多表联查 demo", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "SQL DML / SQL JOIN", "主文档（名称）": "MySQL 文档", "主文档链接": "https://dev.mysql.com/doc/", "入门教程/视频": "菜鸟 SQL", "怎么创建": "sql-w4", "代码文件夹": "sql-w4", "上午任务": "INSERT/UPDATE/SELECT → INNER/LEFT JOIN", "下午任务": "WHERE/GROUP BY → COMMIT/ROLLBACK", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 10条模板 ☐ JOIN+事务", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D20", "日期": "2026-06-26", "星期": "周五", "周次": "W4", "阶段": "第1月·后端API", "模块": "Spring", "今日目标": "Spring Boot 创建", "交付物（必达）": "项目启动成功", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "Spring Boot 入门", "主文档（名称）": "Spring Boot", "主文档链接": "https://docs.spring.io/spring-boot/reference/", "入门教程/视频": "start.spring.io | B站：Spring Boot3", "怎么创建": "start.spring.io → shop-api", "代码文件夹": "shop-api", "上午任务": "生成 shop-api", "下午任务": "application.yml 连库", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 启动OK", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D21", "日期": "2026-06-29", "星期": "周一", "周次": "W4", "阶段": "第1月·后端API", "模块": "Spring", "今日目标": "MyBatis-Plus CRUD", "交付物（必达）": "GET 列表 Postman 200", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "MyBatis-Plus", "主文档（名称）": "Spring Boot", "主文档链接": "https://docs.spring.io/spring-boot/reference/", "入门教程/视频": "baomidou.com", "怎么创建": "shop-api", "代码文件夹": "shop-api", "上午任务": "Entity+Mapper", "下午任务": "GET /products", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 列表有JSON", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D22", "日期": "2026-06-30", "星期": "周二", "周次": "W4", "阶段": "第1月·后端API", "模块": "Spring", "今日目标": "REST 四接口", "交付物（必达）": "CRUD 全通", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "RESTful", "主文档（名称）": "Spring Boot", "主文档链接": "https://docs.spring.io/spring-boot/reference/", "入门教程/视频": "baomidou.com", "怎么创建": "shop-api", "代码文件夹": "shop-api", "上午任务": "POST/PUT/DELETE", "下午任务": "Result 封装", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ CRUD全通", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D23", "日期": "2026-07-01", "星期": "周三", "周次": "W4", "阶段": "第1月·后端API", "模块": "Spring", "今日目标": "M1 后端验收", "交付物（必达）": "API+SQL 文档", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "—", "主文档（名称）": "Spring Boot", "主文档链接": "https://docs.spring.io/spring-boot/reference/", "入门教程/视频": "—", "怎么创建": "shop-api", "代码文件夹": "shop-api", "上午任务": "Postman Collection", "下午任务": "导出 shop.sql", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ M1达成", "建议学时": 6, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D24", "日期": "2026-07-02", "星期": "周四", "周次": "W5", "阶段": "第2月·Android", "模块": "Android", "今日目标": "Android Studio+Hello", "交付物（必达）": "模拟器跑通", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "Android 开发者指南", "主文档（名称）": "Android Docs", "主文档链接": "https://developer.android.com/guide", "入门教程/视频": "B站：Android 零基础 2024", "怎么创建": "New Project hello-android", "代码文件夹": "hello-android", "上午任务": "装 AS+SDK", "下午任务": "Hello World", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 模拟器运行", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D25", "日期": "2026-07-03", "星期": "周五", "周次": "W5", "阶段": "第2月·Android", "模块": "Android", "今日目标": "Activity 与 Layout；常用控件；RecyclerView 列表", "交付物（必达）": "两个页面跳转；登录表单 UI；商品列表页", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "Activity 生命周期 / TextView/Button / RecyclerView", "主文档（名称）": "Android Docs", "主文档链接": "https://developer.android.com/develop/ui/views/layout/recyclerview", "入门教程/视频": "菜鸟 Android | B站：Android UI | B站：RecyclerView", "怎么创建": "android-shop", "代码文件夹": "android-shop", "上午任务": "LinearLayout/Constraint → EditText/Button → Adapter+ViewHolder", "下午任务": "Intent 跳转 → 简单校验 → mock 数据", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 跳转正常 ☐ 表单可输入 ☐ 列表滚动", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D26", "日期": "2026-07-06", "星期": "周一", "周次": "W5", "阶段": "第2月·Android", "模块": "Android", "今日目标": "Retrofit 网络", "交付物（必达）": "调 shop-api 列表", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "Retrofit", "主文档（名称）": "Retrofit", "主文档链接": "https://square.github.io/retrofit/", "入门教程/视频": "B站：Retrofit 入门", "怎么创建": "android-shop", "代码文件夹": "android-shop", "上午任务": "依赖+接口定义", "下午任务": "Gson 解析", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ API 有数据", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D27", "日期": "2026-07-07", "星期": "周二", "周次": "W5", "阶段": "第2月·Android", "模块": "Android", "今日目标": "详情页+加购", "交付物（必达）": "列表→详情通", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "—", "主文档（名称）": "Android Docs", "主文档链接": "https://developer.android.com/guide", "入门教程/视频": "—", "怎么创建": "android-shop", "代码文件夹": "android-shop", "上午任务": "详情 Activity", "下午任务": "传递 id 参数", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 详情可开", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D28", "日期": "2026-07-08", "星期": "周三", "周次": "W5", "阶段": "第2月·Android", "模块": "Android", "今日目标": "W5 验收", "交付物（必达）": "Android 调通 API", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "—", "主文档（名称）": "Android Docs", "主文档链接": "https://developer.android.com/guide", "入门教程/视频": "—", "怎么创建": "android-shop", "代码文件夹": "android-shop", "上午任务": "自测主流程", "下午任务": "打 debug APK", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ W5全过", "建议学时": 6, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D29", "日期": "2026-07-09", "星期": "周四", "周次": "W6", "阶段": "第2月·Android进阶", "模块": "Android", "今日目标": "Fragment+BottomNav", "交付物（必达）": "三 Tab 结构", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "Fragment", "主文档（名称）": "Android Docs", "主文档链接": "https://developer.android.com/guide/fragments", "入门教程/视频": "B站：Fragment 导航", "怎么创建": "android-shop", "代码文件夹": "android-shop", "上午任务": "BottomNavigation", "下午任务": "三 Fragment", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ Tab 可切", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D30", "日期": "2026-07-10", "星期": "周五", "周次": "W6", "阶段": "第2月·Android进阶", "模块": "Android", "今日目标": "SharedPreferences", "交付物（必达）": "登录态本地保存", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "数据存储", "主文档（名称）": "Android Docs", "主文档链接": "https://developer.android.com/training/data-storage", "入门教程/视频": "B站：Android 存储", "怎么创建": "android-shop", "代码文件夹": "android-shop", "上午任务": "存 token", "下午任务": "启动页判断", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 重启仍登录", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D31", "日期": "2026-07-13", "星期": "周一", "周次": "W6", "阶段": "第2月·Android进阶", "模块": "Android", "今日目标": "Glide 图片；权限与打包", "交付物（必达）": "列表带图；debug APK 安装", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "Glide / 应用权限", "主文档（名称）": "Android Docs", "主文档链接": "https://developer.android.com/guide/topics/permissions", "入门教程/视频": "B站：Glide 使用 | B站：Android 打包", "怎么创建": "android-shop", "代码文件夹": "android-shop", "上午任务": "加载网络图 → 网络权限", "下午任务": "占位/错误图 → Build APK", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 图片显示 ☐ 真机可装", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D32", "日期": "2026-07-14", "星期": "周二", "周次": "W6", "阶段": "第2月·Android进阶", "模块": "Android", "今日目标": "JWT 登录对接", "交付物（必达）": "登录拿 token", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "OkHttp 拦截器", "主文档（名称）": "Spring Boot", "主文档链接": "https://docs.spring.io/spring-boot/reference/", "入门教程/视频": "B站：Android JWT", "怎么创建": "android-shop", "代码文件夹": "android-shop", "上午任务": "/login 接口", "下午任务": "Header 带 token", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 登录OK", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D33", "日期": "2026-07-15", "星期": "周三", "周次": "W6", "阶段": "第2月·Android进阶", "模块": "Android", "今日目标": "购物车本地", "交付物（必达）": "加购数量合计", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "—", "主文档（名称）": "Android Docs", "主文档链接": "https://developer.android.com/guide", "入门教程/视频": "—", "怎么创建": "android-shop", "代码文件夹": "android-shop", "上午任务": "Room/Simple 缓存", "下午任务": "合计金额", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 购物车可用", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D34", "日期": "2026-07-16", "星期": "周四", "周次": "W6", "阶段": "第2月·Android进阶", "模块": "Android", "今日目标": "M2-Android 验收", "交付物（必达）": "完整购物流程", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "—", "主文档（名称）": "Android Docs", "主文档链接": "https://developer.android.com/guide", "入门教程/视频": "—", "怎么创建": "android-shop", "代码文件夹": "android-shop", "上午任务": "录屏演示", "下午任务": "push 代码", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ M2-Android", "建议学时": 6, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D35", "日期": "2026-07-17", "星期": "周五", "周次": "W7", "阶段": "第2月·Cocos", "模块": "Cocos", "今日目标": "安装 Creator+界面；节点与组件", "交付物（必达）": "空场景能预览；Sprite 显示图片", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "Cocos 快速上手 / 节点系统", "主文档（名称）": "Cocos 文档", "主文档链接": "https://docs.cocos.com/creator/manual/zh/", "入门教程/视频": "B站：Cocos Creator 3 入门 | B站：Cocos 节点", "怎么创建": "cocos-click-game", "代码文件夹": "cocos-click-game", "上午任务": "装 Creator 3.x → Node/Component", "下午任务": "场景+相机 → Sprite 换图", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 预览正常 ☐ 精灵可见", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D36", "日期": "2026-07-20", "星期": "周一", "周次": "W7", "阶段": "第2月·Cocos", "模块": "Cocos", "今日目标": "TypeScript 脚本", "交付物（必达）": "点击改分数", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "脚本基础", "主文档（名称）": "Cocos 文档", "主文档链接": "https://docs.cocos.com/creator/manual/zh/", "入门教程/视频": "TS 快速入门", "怎么创建": "cocos-click-game", "代码文件夹": "cocos-click-game", "上午任务": "@property 绑定", "下午任务": "onLoad/start", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 点击加分", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D37", "日期": "2026-07-21", "星期": "周二", "周次": "W7", "阶段": "第2月·Cocos", "模块": "Cocos", "今日目标": "UI 与 Label", "交付物（必达）": "计分板+按钮", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "UI 系统", "主文档（名称）": "Cocos 文档", "主文档链接": "https://docs.cocos.com/creator/manual/zh/", "入门教程/视频": "B站：Cocos UI", "怎么创建": "cocos-click-game", "代码文件夹": "cocos-click-game", "上午任务": "Canvas+Label", "下午任务": "Button 事件", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ UI 更新", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D38", "日期": "2026-07-22", "星期": "周三", "周次": "W7", "阶段": "第2月·Cocos", "模块": "Cocos", "今日目标": "动画与 tween；碰撞/定时生成", "交付物（必达）": "得分动画反馈；点击得分小游戏", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "动画系统 / 物理碰撞", "主文档（名称）": "Cocos 文档", "主文档链接": "https://docs.cocos.com/creator/manual/zh/", "入门教程/视频": "B站：Cocos tween | B站：Cocos 小游戏", "怎么创建": "cocos-click-game", "代码文件夹": "cocos-click-game", "上午任务": "Animation/tween → Collider", "下午任务": "缩放反馈 → 倒计时结束", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 有动画 ☐ 小游戏可玩", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D39", "日期": "2026-07-23", "星期": "周四", "周次": "W7", "阶段": "第2月·Cocos", "模块": "Cocos", "今日目标": "W7 验收", "交付物（必达）": "Web 发布可玩", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "构建发布", "主文档（名称）": "Cocos 文档", "主文档链接": "https://docs.cocos.com/creator/manual/zh/", "入门教程/视频": "—", "怎么创建": "cocos-click-game", "代码文件夹": "cocos-click-game", "上午任务": "构建 Web", "下午任务": "录屏 30 秒", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ W7全过", "建议学时": 6, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D40", "日期": "2026-07-24", "星期": "周五", "周次": "W8", "阶段": "第2月·Unity3D", "模块": "Unity", "今日目标": "安装 Hub+创建项目", "交付物（必达）": "3D 场景能跑", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "Unity 入门", "主文档（名称）": "Unity Manual", "主文档链接": "https://docs.unity3d.com/Manual/index.html", "入门教程/视频": "B站：Unity 2022 入门", "怎么创建": "Hub 新建 unity-roll-a-ball", "代码文件夹": "unity-roll-a-ball", "上午任务": "装 Unity Hub+LTS", "下午任务": "Sample 场景", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ Play 正常", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D41", "日期": "2026-07-27", "星期": "周一", "周次": "W8", "阶段": "第2月·Unity3D", "模块": "Unity", "今日目标": "GameObject 与 Transform；C# 脚本基础", "交付物（必达）": "移动立方体；键盘控制移动", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "Transform / MonoBehaviour", "主文档（名称）": "Unity Manual", "主文档链接": "https://docs.unity3d.com/Manual/index.html", "入门教程/视频": "B站：Unity 基础 | 菜鸟 C# | B站：Unity C#", "怎么创建": "unity-roll-a-ball", "代码文件夹": "unity-roll-a-ball", "上午任务": "Position/Rotation → Update+Input", "下午任务": "Scene 视图操作 → 刚体移动", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 物体可移 ☐ WASD 可动", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D42", "日期": "2026-07-28", "星期": "周二", "周次": "W8", "阶段": "第2月·Unity3D", "模块": "Unity", "今日目标": "碰撞与触发", "交付物（必达）": "收集金币得分", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "Collider/Rigidbody", "主文档（名称）": "Unity Manual", "主文档链接": "https://docs.unity3d.com/Manual/index.html", "入门教程/视频": "B站：Unity 碰撞", "怎么创建": "unity-roll-a-ball", "代码文件夹": "unity-roll-a-ball", "上午任务": "OnTriggerEnter", "下午任务": "计分 UI", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 碰撞加分", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D43", "日期": "2026-07-29", "星期": "周三", "周次": "W8", "阶段": "第2月·Unity3D", "模块": "Unity", "今日目标": "UI Canvas；预制体 Prefab", "交付物（必达）": "开始/结束界面；批量生成障碍", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "Unity UI / Prefab", "主文档（名称）": "Unity Manual", "主文档链接": "https://docs.unity3d.com/Manual/index.html", "入门教程/视频": "B站：Unity UGUI | B站：Unity Prefab", "怎么创建": "unity-roll-a-ball", "代码文件夹": "unity-roll-a-ball", "上午任务": "Canvas+Text → 做 Prefab", "下午任务": "Button 重开 → Instantiate", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ UI 可点 ☐ 障碍生成", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D44", "日期": "2026-07-30", "星期": "周四", "周次": "W8", "阶段": "第2月·Unity3D", "模块": "Unity", "今日目标": "M2-Unity 验收", "交付物（必达）": "滚球小游戏可玩", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "—", "主文档（名称）": "Unity Manual", "主文档链接": "https://docs.unity3d.com/Manual/index.html", "入门教程/视频": "—", "怎么创建": "unity-roll-a-ball", "代码文件夹": "unity-roll-a-ball", "上午任务": "打包 PC/WebGL 了解", "下午任务": "录屏+push", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ M2-Unity", "建议学时": 6, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D45", "日期": "2026-07-31", "星期": "周五", "周次": "W9", "阶段": "第3月·后端进阶", "模块": "Spring", "今日目标": "JWT 注册登录", "交付物（必达）": "token 链路", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "JWT 入门", "主文档（名称）": "Spring Boot", "主文档链接": "https://docs.spring.io/spring-boot/reference/", "入门教程/视频": "B站：Spring Boot JWT", "怎么创建": "shop-api", "代码文件夹": "shop-api", "上午任务": "/register /login", "下午任务": "拦截器 401", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 登录拿token", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D46", "日期": "2026-08-03", "星期": "周一", "周次": "W9", "阶段": "第3月·后端进阶", "模块": "Redis", "今日目标": "安装+五类型；Spring 缓存", "交付物（必达）": "redis-cli 会用；商品列表缓存", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "Redis 命令 / Spring Data Redis", "主文档（名称）": "Spring Boot", "主文档链接": "https://docs.spring.io/spring-boot/reference/", "入门教程/视频": "菜鸟 Redis | B站：Redis 缓存", "怎么创建": "shop-api", "代码文件夹": "shop-api", "上午任务": "装 Redis → RedisTemplate", "下午任务": "String/Hash/ZSet → 缓存接口", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 类型练过 ☐ 缓存生效", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D47", "日期": "2026-08-04", "星期": "周二", "周次": "W9", "阶段": "第3月·后端进阶", "模块": "Spring", "今日目标": "订单/状态业务", "交付物（必达）": "下单接口", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "—", "主文档（名称）": "Spring Boot", "主文档链接": "https://docs.spring.io/spring-boot/reference/", "入门教程/视频": "—", "怎么创建": "shop-api", "代码文件夹": "shop-api", "上午任务": "订单表", "下午任务": "状态流转", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 下单通", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D48", "日期": "2026-08-05", "星期": "周三", "周次": "W9", "阶段": "第3月·后端进阶", "模块": "Spring", "今日目标": "文件上传", "交付物（必达）": "头像/商品图", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "Multipart", "主文档（名称）": "Spring Boot", "主文档链接": "https://docs.spring.io/spring-boot/reference/", "入门教程/视频": "B站：Spring 文件上传", "怎么创建": "shop-api", "代码文件夹": "shop-api", "上午任务": "上传接口", "下午任务": "静态资源映射", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 上传可访问", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D49", "日期": "2026-08-06", "星期": "周四", "周次": "W9", "阶段": "第3月·后端进阶", "模块": "Spring", "今日目标": "API 文档完善", "交付物（必达）": "Apifox Collection", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "Postman", "主文档（名称）": "Apifox", "主文档链接": "https://apifox.com/help/", "入门教程/视频": "Postman 文档", "怎么创建": "shop-api", "代码文件夹": "shop-api", "上午任务": "整理接口", "下午任务": "环境变量", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 文档完成", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D50", "日期": "2026-08-07", "星期": "周五", "周次": "W9", "阶段": "第3月·后端进阶", "模块": "后端", "今日目标": "W9 回归测试", "交付物（必达）": "Postman 全绿", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "—", "主文档（名称）": "Spring Boot", "主文档链接": "https://docs.spring.io/spring-boot/reference/", "入门教程/视频": "—", "怎么创建": "shop-api", "代码文件夹": "shop-api", "上午任务": "Collection 跑", "下午任务": "修 bug", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ W9全过", "建议学时": 6, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D51", "日期": "2026-08-10", "星期": "周一", "周次": "W10", "阶段": "第3月·多端联调", "模块": "设计", "今日目标": "多端需求+API 清单", "交付物（必达）": "api-design.md", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "—", "主文档（名称）": "自建文档", "主文档链接": "api-design.md", "入门教程/视频": "B站：前后端分离设计", "怎么创建": "新建 game-platform 目录", "代码文件夹": "game-platform", "上午任务": "功能清单", "下午任务": "15 个接口", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ ER+API", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D52", "日期": "2026-08-11", "星期": "周二", "周次": "W10", "阶段": "第3月·多端联调", "模块": "H5", "今日目标": "【联调】真实 API + 浏览器验收", "交付物（必达）": "登录+列表 Postman/浏览器双验", "怎么学（固定循环）": "懂 H5 在干什么→写清需求→AI 实现→浏览器/真机验收；卡住：F12 Console/Network→改 prompt→对照文档", "今日阅读章节": "CORS", "主文档（名称）": "MDN CORS", "主文档链接": "https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CORS", "入门教程/视频": "Apifox 联调", "怎么创建": "h5-demo", "代码文件夹": "h5-demo", "上午任务": "让 AI 改 baseURL/token 拦截器", "下午任务": "F12 Network 验收登录+列表；记录联调问题", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ H5 读写通 ☐ 验收清单全绿", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D53", "日期": "2026-08-12", "星期": "周三", "周次": "W10", "阶段": "第3月·多端联调", "模块": "Android", "今日目标": "Android 联调修复", "交付物（必达）": "主流程无阻塞", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "—", "主文档（名称）": "Android Docs", "主文档链接": "https://developer.android.com/guide", "入门教程/视频": "—", "怎么创建": "android-shop", "代码文件夹": "android-shop", "上午任务": "对接新接口", "下午任务": "修 401/CORS", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ Android 主流程", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D54", "日期": "2026-08-13", "星期": "周四", "周次": "W10", "阶段": "第3月·多端联调", "模块": "联调", "今日目标": "CORS/跨域排错；购物车/下单闭环", "交付物（必达）": "联调记录表；H5+Android 下单", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "MDN CORS", "主文档（名称）": "Spring Boot", "主文档链接": "https://docs.spring.io/spring-boot/reference/", "入门教程/视频": "—", "怎么创建": "game-platform", "代码文件夹": "game-platform", "上午任务": "前后端对齐 → H5 下单", "下午任务": "修 P0 bug → Android 下单", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 三端能登录 ☐ 下单闭环", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D55", "日期": "2026-08-14", "星期": "周五", "周次": "W10", "阶段": "第3月·多端联调", "模块": "联调", "今日目标": "全流程 5 遍", "交付物（必达）": "无 P0 缺陷", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "—", "主文档（名称）": "—", "主文档链接": "—", "入门教程/视频": "—", "怎么创建": "—", "代码文件夹": "—", "上午任务": "自测脚本", "下午任务": "演示稿", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ W10全过", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D56", "日期": "2026-08-17", "星期": "周一", "周次": "W10", "阶段": "第3月·多端联调", "模块": "联调", "今日目标": "UI/体验打磨", "交付物（必达）": "loading/空态/错误", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "—", "主文档（名称）": "Vant4", "主文档链接": "https://vant-ui.github.io/vant/#/zh-CN", "入门教程/视频": "—", "怎么创建": "h5-demo", "代码文件夹": "h5-demo", "上午任务": "按验收清单补空态/错误提示", "下午任务": "Android 提示统一", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 体验可", "建议学时": 6, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D57", "日期": "2026-08-18", "星期": "周二", "周次": "W11", "阶段": "第3月·运维认知", "模块": "运维", "今日目标": "【目标1】运维岗位分工与协作边界", "交付物（必达）": "岗位协作一页纸", "怎么学（固定循环）": "先懂岗位边界与核心概念→记术语能听懂→练故障定位思路→自查薄弱点；动手以验证概念为主（Docker/Nginx 各练一次），不必先考运维证书", "今日阅读章节": "运维/DevOps/SRE/DBA 分工", "主文档（名称）": "运维岗位概览", "主文档链接": "https://developer.aliyun.com/article/", "入门教程/视频": "B站：运维是做什么的", "怎么创建": "新建 e:\\三个月速成\\learning-code\\ops-notes", "代码文件夹": "ops-notes", "上午任务": "梳理：谁管机器/网络/发布/数据库/监控", "下午任务": "画协作图：开发提需求→运维怎么配合", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 能讲清 4 类岗位 ☐ 协作图完成", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D58", "日期": "2026-08-19", "星期": "周三", "周次": "W11", "阶段": "第3月·运维认知", "模块": "运维", "今日目标": "【目标2·基础】基础设施+网络概念；【目标2·安全】安全与权限概念", "交付物（必达）": "基础概念对照表（20词）；安全概念清单", "怎么学（固定循环）": "先懂岗位边界与核心概念→记术语能听懂→练故障定位思路→自查薄弱点；动手以验证概念为主（Docker/Nginx 各练一次），不必先考运维证书", "今日阅读章节": "VPC/负载均衡/DNS/端口 / 安全组/ACL/密钥/HTTPS", "主文档（名称）": "OWASP 入门", "主文档链接": "https://owasp.org/www-project-top-ten/", "入门教程/视频": "B站：网络基础 运维必知", "怎么创建": "ops-notes", "代码文件夹": "ops-notes", "上午任务": "学：服务器/虚拟机/容器/域名/HTTPS/防火墙 → 学：安全组/白名单/密钥/HTTPS/最小权限", "下午任务": "对照 shop-api 部署图画：用户→Nginx→API→DB → 写：shop-api 上线前 5 条安全检查", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 20 词能解释 ☐ 能画请求路径 ☐ 安全清单完成 ☐ 知道密钥不能进 Git", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D59", "日期": "2026-08-20", "星期": "周四", "周次": "W11", "阶段": "第3月·运维认知", "模块": "运维", "今日目标": "【目标2·发布+库】发布流程与数据库运维概念", "交付物（必达）": "发布流程图+DB 概念表", "怎么学（固定循环）": "先懂岗位边界与核心概念→记术语能听懂→练故障定位思路→自查薄弱点；动手以验证概念为主（Docker/Nginx 各练一次），不必先考运维证书", "今日阅读章节": "CI/CD/回滚/备份", "主文档（名称）": "Docker 入门", "主文档链接": "https://docs.docker.com/get-started/", "入门教程/视频": "B站：Docker 概念 15min", "怎么创建": "docker compose 起 MySQL+Redis（验证概念）", "代码文件夹": "ops-docker", "上午任务": "学：蓝绿/滚动/回滚/mysqldump/主从（概念）", "下午任务": "写 shop-api 从 build→部署→回滚 流程", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 发布流程能口述 ☐ compose 起库成功", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D60", "日期": "2026-08-21", "星期": "周五", "周次": "W11", "阶段": "第3月·运维认知", "模块": "运维", "今日目标": "【目标3】故障沟通专业词汇；【目标4】常见业务故障初判", "交付物（必达）": "运维术语表 30 条；故障定位手册 v1", "怎么学（固定循环）": "先懂岗位边界与核心概念→记术语能听懂→练故障定位思路→自查薄弱点；动手以验证概念为主（Docker/Nginx 各练一次），不必先考运维证书", "今日阅读章节": "日志/告警/SLA/QPS / 排障分层思路", "主文档（名称）": "Nginx 错误码", "主文档链接": "https://nginx.org/en/docs/", "入门教程/视频": "B站：线上故障排查思路", "怎么创建": "ops-runbook", "代码文件夹": "ops-runbook", "上午任务": "整理 30 条：502/504/OOM/磁盘/连接池/超时… → 写 6 类：502/504/接口慢/DB连不上/磁盘满/Redis挂", "下午任务": "模拟 3 段故障群聊：读懂并回复该问什么 → 每类写：现象→先查啥→找谁→临时措施", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 术语表 30 条 ☐ 群聊模拟完成 ☐ 6 类手册完成 ☐ 能口述排查顺序", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D61", "日期": "2026-08-24", "星期": "周一", "周次": "W11", "阶段": "第3月·运维认知", "模块": "运维", "今日目标": "【目标5】自查题+后续计划+W11验收", "交付物（必达）": "5条目标自检+薄弱点清单", "怎么学（固定循环）": "先懂岗位边界与核心概念→记术语能听懂→练故障定位思路→自查薄弱点；动手以验证概念为主（Docker/Nginx 各练一次），不必先考运维证书", "今日阅读章节": "—", "主文档（名称）": "自建 ops-quiz.md", "主文档链接": "ops-quiz.md", "入门教程/视频": "—", "怎么创建": "ops-notes", "代码文件夹": "ops-notes", "上午任务": "50 道自查选择题/问答题", "下午任务": "5 条目标逐条打勾；写后续 3 个月运维深入计划", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 5条全过 ☐ 薄弱点清单 ☐ W11验收", "建议学时": 6, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D62", "日期": "2026-08-25", "星期": "周二", "周次": "W12", "阶段": "第3月·结业", "模块": "测试", "今日目标": "Postman 全量回归；Android+H5 冒烟", "交付物（必达）": "Collection 绿；主流程清单", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "Postman", "主文档（名称）": "—", "主文档链接": "—", "入门教程/视频": "—", "怎么创建": "—", "代码文件夹": "—", "上午任务": "Runner → H5 冒烟", "下午任务": "修接口 → Android 冒烟", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ API 全绿 ☐ 冒烟通过", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D63", "日期": "2026-08-26", "星期": "周三", "周次": "W12", "阶段": "第3月·结业", "模块": "作品集", "今日目标": "GitHub README", "交付物（必达）": "七方向架构图", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "—", "主文档（名称）": "—", "主文档链接": "—", "入门教程/视频": "—", "怎么创建": "—", "代码文件夹": "—", "上午任务": "各项目 README", "下午任务": "无密钥泄露", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ README 完整", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D64", "日期": "2026-08-27", "星期": "周四", "周次": "W12", "阶段": "第3月·结业", "模块": "演示", "今日目标": "3 分钟录屏", "交付物（必达）": "多端 demo 视频", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "—", "主文档（名称）": "—", "主文档链接": "—", "入门教程/视频": "—", "怎么创建": "—", "代码文件夹": "—", "上午任务": "H5+Android+游戏", "下午任务": "后端 API 展示", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 有录屏", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D65", "日期": "2026-08-28", "星期": "周五", "周次": "W12", "阶段": "第3月·结业", "模块": "复盘", "今日目标": "三个月总结", "交付物（必达）": "总结文档", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "—", "主文档（名称）": "—", "主文档链接": "—", "入门教程/视频": "—", "怎么创建": "—", "代码文件夹": "—", "上午任务": "薄弱项", "下午任务": "后续方向", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 总结完成", "建议学时": 7, "完成": "", "实际学时": "", "备注": ""}, {"序号": "D66", "日期": "2026-08-31", "星期": "周一", "周次": "W12", "阶段": "第3月·结业", "模块": "答辩·结业", "今日目标": "模拟答辩；终极验收 M3", "交付物（必达）": "能讲清七方向；全方向交付", "怎么学（固定循环）": "看(15~30min)→敲→跑→改；上午看文档下午做交付物；卡住：报错→查官方文档→对比示例→求助", "今日阅读章节": "—", "主文档（名称）": "—", "主文档链接": "—", "入门教程/视频": "—", "怎么创建": "—", "代码文件夹": "—", "上午任务": "录音练习 → 完整演示", "下午任务": "技术问答 → 代码备份", "晚上复盘提示": "写3句：学了啥/卡在哪/明天干啥", "验收清单": "☐ 能3分钟介绍 ☐ 结业", "建议学时": 6, "完成": "", "实际学时": "", "备注": ""}];
+    const PLAN_META = {"totalDays": 66, "totalHours": 450, "startDate": "2026-06-01", "endDate": "2026-08-31", "weeksCount": 12, "calendarWeeks": 14, "weeklyHours": 38, "weekdayHours": 7, "reviewDayHours": 6, "weekdayOnly": true, "dailySchedule": [["上午", "2.5 小时", "看「今日阅读」+ 跟敲示例"], ["下午", "2.5 小时", "完成当日交付物"], ["晚上", "0.5 小时", "验收清单 + 三句复盘"], ["弹性", "1.5 小时", "补练习 / 卡顿消化（计入 7h）"]], "milestones": [{"id": "M1", "date": "2026-07-01", "dayId": "D23", "label": "H5 八条达标 + 后端 API 入门"}, {"id": "M2", "date": "2026-07-30", "dayId": "D44", "label": "Android + Cocos + Unity 各 1 项目"}, {"id": "M3", "date": "2026-08-31", "dayId": "D66", "label": "三端联调 + 运维五目标达标 + 结业"}]};
+    const TRACK_DEFS = [{"id": "base", "name": "工具与读码", "hours": 41, "weeks": "W1", "dayIds": ["D1", "D2", "D3", "D4", "D5", "D6"], "deliver": "F12 读码 + Git + MySQL（不系统写 HTML）", "dateStart": "2026-06-01", "dateEnd": "2026-06-08", "checkDate": "2026-06-08"}, {"id": "h5", "name": "H5", "hours": 41, "weeks": "W2", "dayIds": ["D7", "D8", "D9", "D10", "D11", "D12"], "deliver": "八条学习目标自检全过 + 验收清单 + AI 实现页", "dateStart": "2026-06-09", "dateEnd": "2026-06-16", "checkDate": "2026-06-16"}, {"id": "backend", "name": "后端", "hours": 116, "weeks": "W3 + W4 + W9", "dayIds": ["D13", "D14", "D15", "D16", "D17", "D18", "D19", "D20", "D21", "D22", "D23", "D45", "D46", "D47", "D48", "D49", "D50"], "deliver": "Java 三程序 + shop-api + JWT/Redis", "dateStart": "2026-06-17", "dateEnd": "2026-08-07", "checkDate": "2026-08-07"}, {"id": "android", "name": "Android", "hours": 75, "weeks": "W5 + W6", "dayIds": ["D24", "D25", "D26", "D27", "D28", "D29", "D30", "D31", "D32", "D33", "D34"], "deliver": "购物 APK（列表/登录/购物车）", "dateStart": "2026-07-02", "dateEnd": "2026-07-16", "checkDate": "2026-07-16"}, {"id": "cocos", "name": "Cocos", "hours": 34, "weeks": "W7", "dayIds": ["D35", "D36", "D37", "D38", "D39"], "deliver": "点击得分 2D 小游戏（Web 发布）", "dateStart": "2026-07-17", "dateEnd": "2026-07-23", "checkDate": "2026-07-23"}, {"id": "unity", "name": "Unity3D", "hours": 34, "weeks": "W8", "dayIds": ["D40", "D41", "D42", "D43", "D44"], "deliver": "滚球收集 3D 小游戏", "dateStart": "2026-07-24", "dateEnd": "2026-07-30", "checkDate": "2026-07-30"}, {"id": "devops", "name": "运维", "hours": 34, "weeks": "W11", "dayIds": ["D57", "D58", "D59", "D60", "D61"], "deliver": "5条目标自检全过 + 术语表 + 故障定位手册", "dateStart": "2026-08-18", "dateEnd": "2026-08-24", "checkDate": "2026-08-24"}, {"id": "integration", "name": "多端联调", "hours": 41, "weeks": "W10", "dayIds": ["D51", "D52", "D53", "D54", "D55", "D56"], "deliver": "H5 + Android + 后端三端主流程", "dateStart": "2026-08-10", "dateEnd": "2026-08-17", "checkDate": "2026-08-17"}, {"id": "graduate", "name": "结业", "hours": 34, "weeks": "W12", "dayIds": ["D62", "D63", "D64", "D65", "D66"], "deliver": "测试 + README + 录屏 + 答辩", "dateStart": "2026-08-25", "dateEnd": "2026-08-31", "checkDate": "2026-08-31"}];
+
+    let records = {};
+    let currentId = PLAN_DAYS[0]?.id || "D1";
+    let saveTimer = null;
+    let activeTab = "plan";
+
+    function loadRecords() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) records = JSON.parse(raw);
+      } catch (e) { console.error(e); }
+    }
+
+    function defaultRecord(dayId) {
+      const day = PLAN_DAYS.find(d => d.id === dayId);
+      const checks = {};
+      (day?.checklistItems || []).forEach((_, i) => { checks[i] = false; });
+      return {
+        status: "pending",
+        hours: "",
+        checklist: checks,
+        journal: "",
+        review: "",
+        note: "",
+        updatedAt: ""
+      };
+    }
+
+    function getRecord(dayId) {
+      if (!records[dayId]) records[dayId] = defaultRecord(dayId);
+      return records[dayId];
+    }
+
+    function scheduleSave() {
+      clearTimeout(saveTimer);
+      document.getElementById("saveStatus").textContent = "保存中…";
+      document.getElementById("saveStatus").classList.remove("saved");
+      saveTimer = setTimeout(() => {
+        records[currentId].updatedAt = new Date().toISOString();
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+        const t = new Date().toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+        const el = document.getElementById("saveStatus");
+        el.textContent = "已自动保存 " + t;
+        el.classList.add("saved");
+        renderDayList();
+        updateProgress();
+        if (activeTab === "log") renderLogPanel();
+      }, 400);
+    }
+
+    function todayId() {
+      const today = new Date().toISOString().slice(0, 10);
+      const found = PLAN_DAYS.find(d => d["日期"] === today);
+      return found ? found.id : PLAN_DAYS[0].id;
+    }
+
+    function dayStatus(dayId) {
+      const r = records[dayId];
+      if (!r) return "";
+      if (r.status === "done") return "done";
+      if (r.status === "doing" || r.hours || r.journal || r.review) return "partial";
+      const checks = Object.values(r.checklist || {});
+      if (checks.some(Boolean)) return "partial";
+      return "";
+    }
+
+    function sumHours(ids) {
+      return ids.reduce((s, id) => s + (parseFloat(records[id]?.hours) || 0), 0);
+    }
+
+    function trackDoneCount(track) {
+      return track.dayIds.filter(id => records[id]?.status === "done").length;
+    }
+
+    function updateProgress() {
+      const done = PLAN_DAYS.filter(d => records[d.id]?.status === "done").length;
+      const pct = Math.round((done / PLAN_DAYS.length) * 100);
+      const actualH = sumHours(PLAN_DAYS.map(d => d.id));
+      document.getElementById("progressFill").style.width = pct + "%";
+      document.getElementById("progressText").textContent =
+        `已完成 ${done}/${PLAN_DAYS.length} 天（${pct}%）· 计划 ${PLAN_META.totalHours}h · 已记录 ${actualH || 0}h`;
+      if (activeTab === "progress") renderProgressPanel();
+    }
+
+    function linkify(text) {
+      if (!text) return "";
+      const escaped = String(text).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+      return escaped.replace(/(https?:\/\/[^\s|]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>');
+    }
+
+    function renderDayList() {
+      const q = document.getElementById("search").value.trim().toLowerCase();
+      const container = document.getElementById("dayList");
+      container.innerHTML = "";
+      let lastWeek = "";
+      PLAN_DAYS.forEach(day => {
+        const text = JSON.stringify(day).toLowerCase();
+        if (q && !text.includes(q) && !day.id.toLowerCase().includes(q)) return;
+        if (day["周次"] !== lastWeek) {
+          lastWeek = day["周次"];
+          const wl = document.createElement("div");
+          wl.className = "week-label";
+          wl.textContent = lastWeek + " · " + (day["阶段"] || "");
+          container.appendChild(wl);
+        }
+        const el = document.createElement("div");
+        el.className = "day-item" + (day.id === currentId ? " active" : "") + " " + dayStatus(day.id);
+        el.dataset.id = day.id;
+        el.innerHTML = `
+          <span class="day-dot"></span>
+          <div>
+            <div><span class="day-id">${day.id}</span> · ${day["日期"]} · ${day["星期"]}</div>
+            <div class="day-meta">${day["模块"]} — ${String(day["今日目标"]).slice(0, 18)}…</div>
+          </div>`;
+        el.onclick = () => selectDay(day.id);
+        container.appendChild(el);
+      });
+    }
+
+    function selectDay(id) {
+      currentId = id;
+      renderDayList();
+      renderPlanPanel();
+    }
+
+    function renderPlanPanel() {
+      const day = PLAN_DAYS.find(d => d.id === currentId);
+      if (!day) return;
+      const r = getRecord(currentId);
+      const checks = day.checklistItems || [];
+      const checkHtml = checks.length ? checks.map((item, i) => `
+        <li>
+          <input type="checkbox" data-check="${i}" ${r.checklist?.[i] ? "checked" : ""} />
+          <span>${item.replace(/^☐\s*/, "")}</span>
+        </li>`).join("") : `<li class="field-value">${day["验收清单"] || "—"}</li>`;
+
+      document.getElementById("panelPlan").innerHTML = `
+        <div class="hero-title">${day.id} · ${day["日期"]}（${day["星期"]}）</div>
+        <div class="hero-sub">${day["阶段"]} / ${day["周次"]} / ${day["模块"]}</div>
+        <div class="tags">
+          <span class="tag">建议 ${day["建议学时"]} 小时</span>
+          <span class="tag">${day["代码文件夹"] || "—"}</span>
+        </div>
+
+        <div class="card">
+          <h2>今日目标 & 交付物</h2>
+          <p class="field-value"><strong>目标：</strong>${day["今日目标"]}</p>
+          <p class="field-value" style="margin-top:10px"><strong>交付物：</strong>${day["交付物（必达）"]}</p>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <h2>上午 / 下午</h2>
+            <p class="field-label">上午任务</p>
+            <p class="field-value">${day["上午任务"]}</p>
+            <p class="field-label" style="margin-top:12px">下午任务</p>
+            <p class="field-value">${day["下午任务"]}</p>
+            <p class="field-label" style="margin-top:12px">晚上复盘提示</p>
+            <p class="field-value">${day["晚上复盘提示"]}</p>
+          </div>
+          <div class="card">
+            <h2>参考资料</h2>
+            <p class="field-label">今日阅读</p>
+            <p class="field-value">${day["今日阅读章节"]}</p>
+            <p class="field-label">主文档</p>
+            <p class="field-value">${linkify(day["主文档链接"])}（${day["主文档（名称）"]}）</p>
+            <p class="field-label">教程 / 视频</p>
+            <p class="field-value">${linkify(day["入门教程/视频"])}</p>
+            <p class="field-label">怎么创建</p>
+            <p class="field-value">${day["怎么创建"]}</p>
+          </div>
+        </div>
+
+        <div class="card record-section">
+          <h2>我的学习记录 <span style="font-size:12px;color:var(--muted);font-weight:normal">（修改后自动保存）</span></h2>
+          <label>学习状态</label>
+          <select id="recStatus">
+            <option value="pending" ${r.status==="pending"?"selected":""}>未开始</option>
+            <option value="doing" ${r.status==="doing"?"selected":""}>进行中</option>
+            <option value="done" ${r.status==="done"?"selected":""}>已完成</option>
+          </select>
+          <label>实际学时（小时）</label>
+          <input type="number" id="recHours" min="0" max="24" step="0.5" value="${r.hours}" placeholder="例如 6" />
+          <label>验收清单（勾选即记录）</label>
+          <ul class="checklist" id="recChecklist">${checkHtml}</ul>
+          <label>学习日记（今天学了什么、代码/问题）</label>
+          <textarea id="recJournal" placeholder="自由记录…">${escapeHtml(r.journal)}</textarea>
+          <label>今晚复盘（学了啥 / 卡在哪 / 明天干啥）</label>
+          <textarea id="recReview" placeholder="3句话复盘…">${escapeHtml(r.review)}</textarea>
+          <label>其它备注</label>
+          <textarea id="recNote" style="min-height:60px" placeholder="可选">${escapeHtml(r.note)}</textarea>
+          ${r.updatedAt ? `<p class="field-label" style="margin-top:12px">上次保存：${new Date(r.updatedAt).toLocaleString("zh-CN")}</p>` : ""}
+        </div>
+      `;
+      bindRecordEvents();
+    }
+
+    function escapeHtml(s) {
+      return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    }
+
+    function bindRecordEvents() {
+      const r = getRecord(currentId);
+      const bind = (id, key, isCheck) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const evt = isCheck ? "change" : "input";
+        el.addEventListener(evt, () => {
+          if (isCheck) {
+            if (!r.checklist) r.checklist = {};
+            document.querySelectorAll("#recChecklist input[data-check]").forEach(cb => {
+              r.checklist[cb.dataset.check] = cb.checked;
+            });
+          } else {
+            r[key] = el.value;
+          }
+          scheduleSave();
+        });
+      };
+      bind("recStatus", "status");
+      bind("recHours", "hours");
+      bind("recJournal", "journal");
+      bind("recReview", "review");
+      bind("recNote", "note");
+      document.querySelectorAll("#recChecklist input[data-check]").forEach(cb => {
+        cb.addEventListener("change", () => {
+          if (!r.checklist) r.checklist = {};
+          r.checklist[cb.dataset.check] = cb.checked;
+          scheduleSave();
+        });
+      });
+      document.getElementById("recStatus")?.addEventListener("change", e => {
+        r.status = e.target.value;
+        scheduleSave();
+      });
+    }
+
+    function renderLogPanel() {
+      const rows = PLAN_DAYS.map(day => {
+        const r = records[day.id] || {};
+        const preview = (r.journal || r.review || r.note || "").slice(0, 40);
+        const statusMap = { pending: "未开始", doing: "进行中", done: "已完成" };
+        return `<tr data-goto="${day.id}" style="cursor:pointer">
+          <td>${day.id}</td>
+          <td>${day["日期"]}</td>
+          <td>${statusMap[r.status] || "未开始"}</td>
+          <td>${r.hours || "—"}</td>
+          <td>${preview || "—"}${preview.length >= 40 ? "…" : ""}</td>
+        </tr>`;
+      }).join("");
+      document.getElementById("panelLog").innerHTML = `
+        <div class="card">
+          <h2>全部学习记录</h2>
+          <p class="field-value" style="color:var(--muted);margin-bottom:16px">点击某行可跳转到该日。数据保存在本机浏览器，可「导出记录」备份。</p>
+          <table class="log-table">
+            <thead><tr><th>序号</th><th>日期</th><th>状态</th><th>学时</th><th>摘要</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>`;
+      document.querySelectorAll("#panelLog tr[data-goto]").forEach(tr => {
+        tr.onclick = () => {
+          selectDay(tr.dataset.goto);
+          setTab("plan");
+        };
+      });
+    }
+
+    function renderProgressPanel() {
+      const today = new Date().toISOString().slice(0, 10);
+      const todayDay = PLAN_DAYS.find(d => d["日期"] === today);
+      const scheduleRows = PLAN_META.dailySchedule.map(r =>
+        `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`
+      ).join("");
+      const trackRows = TRACK_DEFS.map(track => {
+        const done = trackDoneCount(track);
+        const total = track.dayIds.length;
+        const tpct = total ? Math.round(done / total * 100) : 0;
+        const ah = sumHours(track.dayIds);
+        const status = done >= total ? "done" : (today >= track.dateStart && today <= track.dateEnd ? "active" : "");
+        return `
+          <div class="track-row">
+            <div class="track-head">
+              <span class="track-name">${track.name}</span>
+              <span class="track-meta">${track.dateStart} ~ ${track.dateEnd} · ${track.weeks} · 计划 ${track.hours}h</span>
+            </div>
+            <div class="track-bar"><div class="track-fill" style="width:${tpct}%"></div></div>
+            <div class="track-meta">${done}/${total} 天（${tpct}%）· 已记录 ${ah || 0}h · 交付：${track.deliver}</div>
+          </div>`;
+      }).join("");
+      const msItems = PLAN_META.milestones.map(ms => {
+        const cls = today >= ms.date ? "done" : (todayDay && todayDay.id >= ms.dayId ? "done" : "future");
+        const r = records[ms.dayId];
+        const hit = r?.status === "done" ? " ✓" : "";
+        return `<div class="timeline-item ${cls}"><strong>${ms.id}</strong> · ${ms.date} · ${ms.label}${hit}</div>`;
+      }).join("");
+      document.getElementById("panelProgress").innerHTML = `
+        <div class="card">
+          <h2>总时间与进程</h2>
+          <p class="field-value"><strong>周期：</strong>${PLAN_META.startDate} ~ ${PLAN_META.endDate}（${PLAN_META.totalDays} 个工作日 / ${PLAN_META.weeksCount} 内容周 · 约 ${PLAN_META.calendarWeeks} 个自然周）</p>
+          <p class="field-value"><strong>总计划学时：</strong>${PLAN_META.totalHours} 小时（每周 ${PLAN_META.weeklyHours}h = 6×${PLAN_META.weekdayHours}h + 1×${PLAN_META.reviewDayHours}h · 仅工作日学习 · 周末休息）</p>
+          <p class="field-value"><strong>今天（${today}）：</strong>${todayDay ? todayDay.id + " · " + todayDay["阶段"] + " · " + todayDay["今日目标"] : "不在计划期内"}</p>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <h2>每日时间分配（固定）</h2>
+            <table class="log-table">
+              <thead><tr><th>时段</th><th>时长</th><th>做什么</th></tr></thead>
+              <tbody>${scheduleRows}</tbody>
+            </table>
+          </div>
+          <div class="card">
+            <h2>里程碑节点</h2>
+            <div class="timeline">${msItems}</div>
+          </div>
+        </div>
+        <div class="card">
+          <h2>各方向学习进度（按「学习状态=已完成」统计）</h2>
+          ${trackRows}
+        </div>`;
+    }
+
+    function renderHelpPanel() {
+      document.getElementById("panelHelp").innerHTML = `
+        <div class="card">
+          <h2>怎么用</h2>
+          <ol class="field-value" style="padding-left:20px">
+            <li>左侧点击某一天，右侧显示当日学习内容。</li>
+            <li>在「我的学习记录」填写状态、学时、日记、复盘——<strong>自动保存</strong>到本机。</li>
+            <li>点「今天」快速跳到计划表里今天的日期。</li>
+            <li>「时间与进度」查看总学时、各方向进度条、里程碑。</li>
+            <li>「学习记录总览」查看全部打卡情况。</li>
+            <li>定期点「导出记录」备份 JSON，换电脑可用「导入记录」恢复。</li>
+          </ol>
+          <p class="field-value" style="margin-top:12px"><strong>准确时间：</strong>共 ${PLAN_META.totalHours} 小时 / ${PLAN_META.totalDays} 个工作日；仅周一至周五学习（每天 7h，每周最后一个工作日验收 6h），周末休息。</p>
+          <p class="field-value" style="margin-top:16px;color:var(--warn)">注意：清除浏览器数据会丢失记录，请务必偶尔导出备份。</p>
+          <p class="field-value">代码目录：<code>e:\三个月速成\learning-code</code></p>
+        </div>`;
+    }
+
+    function setTab(tab) {
+      activeTab = tab;
+      document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t.dataset.tab === tab));
+      document.getElementById("panelPlan").classList.toggle("hidden", tab !== "plan");
+      document.getElementById("panelProgress").classList.toggle("hidden", tab !== "progress");
+      document.getElementById("panelLog").classList.toggle("hidden", tab !== "log");
+      document.getElementById("panelHelp").classList.toggle("hidden", tab !== "help");
+      if (tab === "progress") renderProgressPanel();
+      if (tab === "log") renderLogPanel();
+      if (tab === "help") renderHelpPanel();
+    }
+
+    document.querySelectorAll(".tab").forEach(t => {
+      t.onclick = () => setTab(t.dataset.tab);
+    });
+    document.getElementById("btnToday").onclick = () => selectDay(todayId());
+    document.getElementById("search").oninput = renderDayList;
+    document.getElementById("btnExport").onclick = () => {
+      const blob = new Blob([JSON.stringify({ version: 1, exportedAt: new Date().toISOString(), records }, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "七方向学习记录_" + new Date().toISOString().slice(0,10) + ".json";
+      a.click();
+    };
+    document.getElementById("btnImport").onclick = () => document.getElementById("importFile").click();
+    document.getElementById("importFile").onchange = e => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const data = JSON.parse(reader.result);
+          records = data.records || data;
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+          alert("导入成功！");
+          renderDayList();
+          updateProgress();
+          renderPlanPanel();
+          if (activeTab === "log") renderLogPanel();
+          if (activeTab === "progress") renderProgressPanel();
+        } catch (err) { alert("导入失败：" + err.message); }
+      };
+      reader.readAsText(file);
+      e.target.value = "";
+    };
+
+    loadRecords();
+    PLAN_DAYS.forEach(d => getRecord(d.id));
+    const urlDay = new URLSearchParams(location.search).get("day");
+    if (urlDay && PLAN_DAYS.some(d => d.id === urlDay)) currentId = urlDay;
+    else if (PLAN_DAYS.some(d => d.id === todayId())) currentId = todayId();
+    renderDayList();
+    renderPlanPanel();
+    renderProgressPanel();
+    renderHelpPanel();
+    updateProgress();
+  </script>
+</body>
+</html>
