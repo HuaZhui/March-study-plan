@@ -1,6 +1,6 @@
 <html lang="zh-CN"><head>
     <meta charset="UTF-8">
-    <title>六一儿童节，你要给我买旺仔牛奶吗</title>
+    <title>Web学习产出</title>
   
     <script src="https://hm.baidu.com/hm.js?530cca224da9770059b6caf6aa908556"></script><script>
       var _hmt = _hmt || [];
@@ -78,7 +78,7 @@
   <body>
     <div id="guardTouchLayer"></div>
   
-    <iframe id="frame" loading="lazy" sandbox="allow-scripts allow-popups allow-same-origin allow-storage-access-by-user-activation" referrerpolicy="no-referrer" src="六一儿童节.html"></iframe>
+    <iframe id="frame" loading="lazy" sandbox="allow-scripts allow-popups allow-same-origin allow-storage-access-by-user-activation" referrerpolicy="no-referrer" src="https://daima.se22.cn/"></iframe>
   
     <script>
       function getId() {
@@ -105,17 +105,13 @@
         : 'https://daima.se22.cn/';
   
       var titleMap = {
-        '2600': '2026新年祝福 - 温馨旅途',
-        '8290': '六一儿童节，你要给我买旺仔牛奶吗'
+        '2600': '2026新年祝福 - 温馨旅途'
       };
 
-      var localChildrenDay = '六一儿童节.html';
-      var useLocalChildrenDay = !safeId || safeId === '8290';
-
-      var finalTitle = titleMap[safeId] || (safeId ? ('专属页面 - ' + safeId) : '六一儿童节，你要给我买旺仔牛奶吗');
+      var finalTitle = titleMap[safeId] || (safeId ? ('专属页面 - ' + safeId) : 'Web学习产出');
       document.title = finalTitle;
 
-      iframe.src = useLocalChildrenDay ? localChildrenDay : iframeUrl;
+      iframe.src = iframeUrl;
   
       window.addEventListener('message', function (e) {
         var trustedOrigins = [
