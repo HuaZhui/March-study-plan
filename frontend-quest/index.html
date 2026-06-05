@@ -255,6 +255,171 @@
       justify-content: flex-end;
     }
 
+    /* ── 代码填空 ── */
+    .fill-wrap { margin-top: 12px; }
+    .fill-code {
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+      font-family: "Cascadia Code", "Consolas", monospace;
+      font-size: 13px;
+      line-height: 2;
+      overflow-x: auto;
+    }
+    .fill-line { white-space: pre; }
+    .fill-input {
+      display: inline-block;
+      min-width: 72px;
+      max-width: 160px;
+      padding: 2px 8px;
+      margin: 0 2px;
+      border: none;
+      border-bottom: 2px solid var(--gold);
+      background: rgba(240,193,75,.08);
+      color: var(--gold);
+      font-family: inherit;
+      font-size: 13px;
+      outline: none;
+      vertical-align: baseline;
+    }
+    .fill-input:focus { background: rgba(240,193,75,.18); }
+    .fill-input.wrong {
+      border-bottom-color: var(--hp);
+      background: rgba(248,81,73,.12);
+      animation: shake .35s;
+    }
+    .fill-input.correct {
+      border-bottom-color: var(--ok);
+      background: rgba(63,185,80,.12);
+    }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      25% { transform: translateX(-4px); }
+      75% { transform: translateX(4px); }
+    }
+    .fill-actions { margin-top: 14px; display: flex; gap: 10px; align-items: center; }
+    .q-type-tag {
+      display: inline-block;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: rgba(163,113,247,.2);
+      color: var(--mp);
+      margin-left: 8px;
+      font-weight: normal;
+    }
+    .q-type-tag.choice { background: rgba(88,166,255,.15); color: var(--accent); }
+
+    /* ── 学习课堂 ── */
+    #screen-study { flex: 1; }
+    .study-body {
+      flex: 1;
+      max-width: 760px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 20px 20px 32px;
+      overflow-y: auto;
+    }
+    .study-hero {
+      background: linear-gradient(135deg, rgba(88,166,255,.12), rgba(163,113,247,.08));
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 22px;
+      margin-bottom: 16px;
+    }
+    .study-hero h2 { font-size: 1.25rem; margin-bottom: 6px; }
+    .study-hero p { color: var(--muted); font-size: 14px; line-height: 1.6; }
+    .study-section {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin-bottom: 12px;
+    }
+    .study-section h3 {
+      font-size: .95rem;
+      color: var(--accent);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .study-section p, .study-section li {
+      font-size: 14px;
+      line-height: 1.75;
+      color: var(--text);
+    }
+    .study-section ul { padding-left: 20px; margin-top: 6px; }
+    .study-section li { margin-bottom: 4px; }
+    .study-section code {
+      background: var(--panel2);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 13px;
+      color: var(--gold);
+    }
+    .study-example {
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+      font-family: "Cascadia Code", "Consolas", monospace;
+      font-size: 13px;
+      line-height: 1.65;
+      overflow-x: auto;
+      white-space: pre;
+      color: #79c0ff;
+      margin-top: 10px;
+    }
+    .study-tip {
+      background: rgba(240,193,75,.08);
+      border-left: 3px solid var(--gold);
+      padding: 10px 14px;
+      border-radius: 0 8px 8px 0;
+      font-size: 13px;
+      line-height: 1.65;
+      margin-top: 10px;
+      color: var(--muted);
+    }
+    .study-tip strong { color: var(--gold); }
+    .study-exam {
+      background: rgba(63,185,80,.08);
+      border: 1px solid rgba(63,185,80,.3);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-top: 4px;
+    }
+    .study-exam h3 { color: var(--ok); }
+    .study-footer {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      padding: 16px 20px 24px;
+      border-top: 1px solid var(--border);
+      background: var(--panel);
+    }
+    .study-steps {
+      display: flex;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .study-steps span {
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: var(--panel2);
+      border: 1px solid var(--border);
+    }
+    .study-steps span.active {
+      background: rgba(88,166,255,.15);
+      border-color: var(--accent);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
     /* ── 胜利/通关 ── */
     .victory-overlay {
       position: fixed;
@@ -309,7 +474,8 @@
   <p class="subtitle">
     网站世界被 Bug 军团入侵了！<br/>
     每击败一个 Bug，就掌握一项前端技能。<br/>
-    <strong>30 关全通 = 前端核心知识毕业</strong>
+    <strong>26 关全通 = 前端核心知识毕业</strong><br/>
+    <span style="font-size:14px;color:#8b949e">每关先学再练 · 含代码填空 · 答错须重答</span>
   </p>
   <button class="btn btn-primary" id="btn-start">开始冒险</button>
   <button class="btn" id="btn-continue" style="margin-left:8px;display:none">继续游戏</button>
@@ -331,10 +497,31 @@
   <div class="map-body" id="map-container"></div>
 </div>
 
+<!-- ═══ 学习课堂（每关挑战前） ═══ -->
+<div id="screen-study" class="screen">
+  <div class="topbar">
+    <button class="btn" id="btn-study-back">← 返回地图</button>
+    <h1 id="study-title">学习课堂</h1>
+  </div>
+  <div class="study-body">
+    <div class="study-steps">
+      <span class="active">① 学习知识</span>
+      <span>② 答题挑战</span>
+      <span>③ 代码填空</span>
+    </div>
+    <div id="study-content"></div>
+  </div>
+  <div class="study-footer">
+    <button class="btn" id="btn-review-later">稍后再学</button>
+    <button class="btn btn-primary" id="btn-start-battle">我已学完，开始挑战 →</button>
+  </div>
+</div>
+
 <!-- ═══ 战斗/答题 ═══ -->
 <div id="screen-battle" class="screen">
   <div class="topbar">
     <button class="btn" id="btn-back-map">← 返回地图</button>
+    <button class="btn" id="btn-back-study">📖 复习本关</button>
     <h1 id="battle-title">关卡</h1>
   </div>
   <div class="battle-body">
@@ -348,9 +535,11 @@
       <h3 id="question-text">题目</h3>
       <div id="code-display"></div>
       <div class="options" id="options"></div>
+      <div class="fill-wrap" id="fill-wrap" style="display:none"></div>
       <div class="feedback" id="feedback"></div>
     </div>
     <div class="battle-footer">
+      <button class="btn btn-primary" id="btn-submit-fill" style="display:none">提交答案</button>
       <button class="btn" id="btn-next-q" style="display:none">下一题 →</button>
     </div>
   </div>
@@ -377,514 +566,7 @@
   </div>
 </div>
 
-<script>
-/* ═══════════════════════════════════════════
-   游戏数据：5 大区域 × 30 关 = 前端完整路径
-   与「三个月速成」W1读码 + W2 H5 目标对齐
-   ═══════════════════════════════════════════ */
-const REGIONS = [
-  {
-    id: "html", icon: "📄", name: "HTML 结构森林",
-    desc: "标签、语义化、表单 — 网页的骨架",
-    planMap: "W1 D3-D4 · H5目标·读结构",
-    levels: [
-      { id:"h1", name:"标签入门", enemy:"🪲", bug:"乱码小虫",
-        lesson:"HTML 用<strong>标签</strong>描述内容。每个标签有开始和结束：<code>&lt;p&gt;文字&lt;/p&gt;</code>。浏览器读到标签就知道怎么显示。",
-        questions:[
-          { q:"哪个标签表示段落？", code:"", opts:["<div>","<p>","<span>","<section>"], ans:1, exp:"<p> = paragraph 段落。" },
-          { q:"`<h1>` 通常用于？", code:"", opts:["最小标题","页面主标题","加粗文字","隐藏内容"], ans:1, exp:"h1-h6 六级标题，h1 最大最重要。" },
-          { q:"下面哪个写法正确？", code:"<p>你好</p>", opts:["<p>你好","<p>你好<p>","<p>你好</p>","p>你好</p>"], ans:2, exp:"标签必须成对闭合。" }
-        ]},
-      { id:"h2", name:"链接与图片", enemy:"🕷️", bug:"断链蜘蛛",
-        lesson:"<code>&lt;a href=\"url\"&gt;</code> 做超链接；<code>&lt;img src=\"路径\" alt=\"描述\"&gt;</code> 插入图片。alt 在图片加载失败时显示。",
-        questions:[
-          { q:"点击跳转到百度，正确写法？", code:"", opts:['<a src="https://baidu.com">','<link href="https://baidu.com">','<a href="https://baidu.com">百度</a>','<url>https://baidu.com</url>'], ans:2, exp:"a 标签 + href 属性。" },
-          { q:"img 标签哪个属性是必填的（规范要求）？", code:"", opts:["width","alt","class","id"], ans:1, exp:"alt 提供替代文字，利于无障碍和 SEO。" },
-          { q:"在新标签页打开链接？", code:"", opts:['target="_self"','target="_blank"','open="new"','tab="new"'], ans:1, exp:"target=\"_blank\" 新窗口打开。" }
-        ]},
-      { id:"h3", name:"列表与表格", enemy:"🐜", bug:"排列蚂蚁",
-        lesson:"无序列表 <code>&lt;ul&gt;&lt;li&gt;</code>，有序列表 <code>&lt;ol&gt;&lt;li&gt;</code>。表格用 <code>&lt;table&gt;&lt;tr&gt;&lt;td&gt;</code>。",
-        questions:[
-          { q:"无序列表的正确结构？", code:"", opts:["<list><item>","<ul><li>","<ol><div>","<dl><dt>"], ans:1, exp:"ul = unordered list, li = list item。" },
-          { q:"表格一行用什么标签？", code:"", opts:["<td>","<tr>","<th>","<row>"], ans:1, exp:"tr = table row 表格行。" },
-          { q:"`<ol>` 和 `<ul>` 的区别？", code:"", opts:["没区别","ol有序带编号","ul更大","ol只能放图片"], ans:1, exp:"ol 自动编号 1,2,3…" }
-        ]},
-      { id:"h4", name:"表单元素", enemy:"🦗", bug:"表单蝗虫",
-        lesson:"<code>&lt;form&gt;</code> 收集用户输入。<code>&lt;input&gt;</code> 单行，<code>&lt;textarea&gt;</code> 多行，<code>&lt;button&gt;</code> 按钮，<code>&lt;select&gt;</code> 下拉。",
-        questions:[
-          { q:"密码输入框 type 值？", code:'<input type="___" />', opts:["text","password","hidden","secret"], ans:1, exp:"type=\"password\" 会隐藏输入。" },
-          { q:"提交表单按钮？", code:"", opts:['<input type="submit">','<submit>','<form-button>','<go>'], ans:0, exp:"input type=\"submit\" 或 button type=\"submit\"。" },
-          { q:"placeholder 的作用？", code:"", opts:["设置默认值","输入框内的灰色提示","表单名称","验证规则"], ans:1, exp:"placeholder 是占位提示，不是真实值。" }
-        ]},
-      { id:"h5", name:"语义化标签", enemy:"🐉", bug:"语义之龙", boss:true,
-        lesson:"语义化让代码<strong>可读、SEO 友好</strong>：<code>header</code> 页头、<code>nav</code> 导航、<code>main</code> 主体、<code>footer</code> 页脚、<code>article</code> 文章、<code>section</code> 区块。",
-        questions:[
-          { q:"导航链接区域最适合？", code:"", opts:["<div class=\"nav\">","<nav>","<header>","<menu>"], ans:1, exp:"<nav> 专用于导航。" },
-          { q:"页面唯一主内容区？", code:"", opts:["<body>","<content>","<main>","<section>"], ans:2, exp:"<main> 每页通常只有一个。" },
-          { q:"一篇独立文章/blog？", code:"", opts:["<section>","<article>","<div>","<aside>"], ans:1, exp:"<article> 表示独立完整的内容单元。" },
-          { q:"侧边栏补充信息？", code:"", opts:["<side>","<extra>","<aside>","<sidebar>"], ans:2, exp:"<aside> 侧边栏/附加信息。" }
-        ]}
-    ]
-  },
-  {
-    id: "css", icon: "🎨", name: "CSS 样式峡谷",
-    desc: "选择器、盒模型、Flex — 网页的外观",
-    planMap: "W1 D5-D6 · H5目标·读CSS适配",
-    levels: [
-      { id:"c1", name:"选择器", enemy:"🎭", bug:"伪装怪",
-        lesson:"CSS 用<strong>选择器</strong>选中元素加样式。常见：<code>.class</code> 类、<code>#id</code> ID、<code>tag</code> 标签、<code>parent > child</code> 子选择器。",
-        questions:[
-          { q:"选中 class=\"btn\" 的元素？", code:"", opts:["#btn",".btn","btn","*btn"], ans:1, exp:". 开头表示 class。" },
-          { q:"选中 id=\"header\" ？", code:"", opts:[".header","#header","header","@header"], ans:1, exp:"# 开头表示 id，页面应唯一。" },
-          { q:"哪个优先级最高？", code:"", opts:["标签选择器","类选择器","内联 style","通配符 *"], ans:2, exp:"内联 > id > class > 标签。" }
-        ]},
-      { id:"c2", name:"盒模型", enemy:"📦", bug:"盒模型魔",
-        lesson:"每个元素是一个<strong>盒子</strong>：content → padding → border → margin。<code>box-sizing: border-box</code> 让 width 包含 padding 和 border。",
-        questions:[
-          { q:"元素外部的空白间距？", code:"", opts:["padding","border","margin","gap"], ans:2, exp:"margin 在边框外面。" },
-          { q:"border-box 的含义？", code:"", opts:["只有边框","width含padding和border","没有margin","圆形盒子"], ans:1, exp:"更好控布局，H5 常用。" },
-          { q:"内边距属性？", code:"", opts:["margin","padding","spacing","inner"], ans:1, exp:"padding 在内容与边框之间。" }
-        ]},
-      { id:"c3", name:"Flex 布局", enemy:"🧱", bug:"排列砖块",
-        lesson:"<code>display: flex</code> 让子元素弹性排列。<code>justify-content</code> 主轴对齐，<code>align-items</code> 交叉轴对齐。H5 移动端最常用！",
-        questions:[
-          { q:"水平居中（主轴）？", code:"display:flex;\njustify-content: ___;", opts:["center","middle","align-center","flex-center"], ans:0, exp:"justify-content: center" },
-          { q:"垂直居中（交叉轴）？", code:"display:flex;\nalign-items: ___;", opts:["center","middle","vertical-center","flex-center"], ans:0, exp:"align-items: center" },
-          { q:"子元素等分空间？", code:"", opts:["flex:1","share:equal","width:100%","float:left"], ans:0, exp:"flex: 1 让子项平分剩余空间。" }
-        ]},
-      { id:"c4", name:"响应式", enemy:"📱", bug:"屏幕变形怪",
-        lesson:"<code>&lt;meta viewport&gt;</code> 让手机正确缩放。媒体查询 <code>@media (max-width:768px)</code> 在不同屏幕应用不同样式。rem 相对根字体大小。",
-        questions:[
-          { q:"viewport meta 的作用？", code:"", opts:["加速加载","控制移动端缩放","加密页面","设置标题"], ans:1, exp:"H5 必写 viewport。" },
-          { q:"手机端样式写法？", code:"", opts:["@phone {}","@media (max-width:768px) {}","@mobile {}","@screen phone {}"], ans:1, exp:"媒体查询按屏幕宽度切换。" },
-          { q:"rem 相对什么？", code:"", opts:["父元素","根元素html","body","viewport"], ans:1, exp:"rem = root em，H5 适配常用。" }
-        ]},
-      { id:"c5", name:"CSS 综合", enemy:"🌈", bug:"调色巨龙", boss:true,
-        lesson:"颜色 <code>color/background</code>，字体 <code>font-size/font-weight</code>，圆角 <code>border-radius</code>，阴影 <code>box-shadow</code>，过渡 <code>transition</code>。",
-        questions:[
-          { q:"文字颜色属性？", code:"", opts:["text-color","font-color","color","foreground"], ans:2, exp:"color 设置文字颜色。" },
-          { q:"圆角 8px？", code:"", opts:["round:8px","border-radius:8px","corner:8px","radius:8px"], ans:1, exp:"border-radius 控制圆角。" },
-          { q:"hover 动画过渡？", code:"", opts:["animation:hover","transition: all .3s","transform:hover","animate: 3s"], ans:1, exp:"transition 让属性变化平滑。" },
-          { q:"隐藏元素但保留占位？", code:"", opts:["display:none","visibility:hidden","opacity:0","remove"], ans:1, exp:"visibility:hidden 仍占空间；display:none 不占。" }
-        ]}
-    ]
-  },
-  {
-    id: "js", icon: "⚡", name: "JavaScript 火山",
-    desc: "变量、逻辑、函数 — 网页的大脑",
-    planMap: "W1 读码 · W2 JS验收",
-    levels: [
-      { id:"j1", name:"变量与类型", enemy:"🔢", bug:"类型混淆者",
-        lesson:"<code>let</code> 可变，<code>const</code> 常量。基本类型：string、number、boolean、null、undefined。用 <code>typeof</code> 查看类型。",
-        questions:[
-          { q:"声明不可变变量？", code:"", opts:["var x","let x","const x","fixed x"], ans:2, exp:"const 声明后不能重新赋值。" },
-          { q:"typeof null 返回？", code:"", opts:['"null"','"object"','"undefined"','"boolean"'], ans:1, exp:"JS 历史遗留 bug，null 返回 object。" },
-          { q:"下面哪个是字符串？", code:"", opts:["42","'42'","true","null"], ans:1, exp:"引号包裹的是字符串。" }
-        ]},
-      { id:"j2", name:"条件与循环", enemy:"🔀", bug:"分支幽灵",
-        lesson:"<code>if/else</code> 条件判断，<code>for</code> 和 <code>for...of</code> 循环遍历。<code>===</code> 严格相等（类型+值）。",
-        questions:[
-          { q:"严格相等运算符？", code:"", opts:["==","===","=","!="], ans:1, exp:"=== 不会类型转换，更安全。" },
-          { q:"`1 == '1'` 结果？", code:"", opts:["true","false","报错","undefined"], ans:0, exp:"== 会做类型转换。" },
-          { q:"`1 === '1'` 结果？", code:"", opts:["true","false","报错","null"], ans:1, exp:"=== 类型不同直接 false。" }
-        ]},
-      { id:"j3", name:"函数", enemy:"📐", bug:"函数工匠",
-        lesson:"函数封装可复用逻辑。箭头函数 <code>(a,b) => a+b</code> 简洁。参数可以有默认值。return 返回值。",
-        questions:[
-          { q:"箭头函数写法？", code:"", opts:["function => x","x => x * 2","=> x * 2","func x => x*2"], ans:1, exp:"(参数) => 表达式 或 { return ... }" },
-          { q:"没有 return 的函数返回？", code:"", opts:["0","null","undefined","false"], ans:2, exp:"默认返回 undefined。" },
-          { q:"调用函数 greet() 的写法？", code:"function greet(){}", opts:["call greet","greet()","run greet","execute(greet)"], ans:1, exp:"函数名加括号调用。" }
-        ]},
-      { id:"j4", name:"数组与对象", enemy:"🗃️", bug:"数据保管员",
-        lesson:"数组 <code>[1,2,3]</code>，对象 <code>{name:'Tom', age:18}</code>。常用：map/filter/forEach/find。",
-        questions:[
-          { q:"取对象属性？", code:"const u = {name:'Amy'};", opts:["u[name]","u->name","u.name","u::name"], ans:2, exp:"点语法或 u['name']。" },
-          { q:"数组长度？", code:"const arr = [1,2,3];", opts:["arr.size","arr.count","arr.length","arr.len"], ans:2, exp:".length 属性。" },
-          { q:"map 的作用？", code:"", opts:["过滤元素","映射/transform每个元素","排序","去重"], ans:1, exp:"map 返回新数组，每个元素经过函数变换。" }
-        ]},
-      { id:"j5", name:"异步基础", enemy:"⏳", bug:"时间术士",
-        lesson:"<code>Promise</code> 处理异步。async/await 让异步代码像同步一样读。fetch() 发 HTTP 请求获取数据。",
-        questions:[
-          { q:"发 GET 请求？", code:"", opts:["ajax()","http.get()","fetch(url)","request(url)"], ans:2, exp:"现代浏览器原生 fetch API。" },
-          { q:"await 必须在什么函数里？", code:"", opts:["普通 function","async function","箭头函数","任何函数"], ans:1, exp:"await 只能在 async 函数中使用。" },
-          { q:"Promise 三种状态不包括？", code:"", opts:["pending","resolved/fulfilled","rejected","paused"], ans:3, exp:"pending → fulfilled 或 rejected。" }
-        ]},
-      { id:"j6", name:"JS 综合", enemy:"🧠", bug:"逻辑魔王", boss:true,
-        lesson:"综合：作用域、闭包概念、JSON.parse/stringify、模板字符串 <code>`你好 ${name}`</code>、解构赋值。",
-        questions:[
-          { q:"模板字符串写法？", code:"", opts:['"hello "+name',"'hello '+name","`hello ${name}`","hello ${name}"], ans:2, exp:"反引号 + ${变量}。" },
-          { q:"JSON 字符串转对象？", code:"", opts:["JSON.toObject()","JSON.parse()","parse.json()","Object.fromJSON()"], ans:1, exp:"JSON.parse(str) 最常用。" },
-          { q:"`[] + []` 结果？", code:"", opts:['""',"[]","0","报错"], ans:0, exp:"数组转字符串再拼接 → 空字符串。" },
-          { q:"const {a,b} = {a:1,b:2} 是？", code:"", opts:["数组解构","对象解构","赋值错误","循环"], ans:1, exp:"解构赋值，快速取属性。" }
-        ]}
-    ]
-  },
-  {
-    id: "dom", icon:"🖱️", name:"DOM 交互平原",
-    desc:"选元素、改内容、绑事件 — 让页面活起来",
-    planMap: "W2 H5 · F12验收+交互",
-    levels: [
-      { id:"d1", name:"选择元素", enemy:"🎯", bug:"定位猎手",
-        lesson:"<code>document.querySelector('.btn')</code> 选第一个匹配元素。<code>querySelectorAll</code> 选全部。返回 DOM 节点对象。",
-        questions:[
-          { q:"选第一个 .item 元素？", code:"", opts:["getElement('.item')","querySelector('.item')","select('.item')","find('.item')"], ans:1, exp:"querySelector 用 CSS 选择器语法。" },
-          { q:"选 id=app 的元素？", code:"", opts:["querySelector('.app')","querySelector('#app')","getById('app')","两者B和C都对"], ans:3, exp:"#app 或 getElementById('app')。" },
-          { q:"改元素文字内容？", code:"", opts:["el.value","el.textContent","el.html","el.innerText()"], ans:1, exp:"textContent 设置纯文本。" }
-        ]},
-      { id:"d2", name:"事件监听", enemy:"👆", bug:"点击精灵",
-        lesson:"<code>el.addEventListener('click', handler)</code> 绑定事件。handler 是函数。event.preventDefault() 阻止默认行为（如表单提交）。",
-        questions:[
-          { q:"绑定点击事件？", code:"", opts:["el.onclick = fn","el.addEventListener('click', fn)","el.click(fn)","el.on('click', fn)"], ans:1, exp:"addEventListener 更灵活，可绑多个。" },
-          { q:"阻止链接默认跳转？", code:"", opts:["e.stop()","e.preventDefault()","e.cancel()","return false only"], ans:1, exp:"preventDefault() 阻止默认行为。" },
-          { q:"事件对象通常叫？", code:"", opts:["evt / event / e","this","target only","param"], ans:0, exp:"回调第一个参数是 event 对象。" }
-        ]},
-      { id:"d3", name:"改样式与类", enemy:"✨", bug:"样式法师",
-        lesson:"<code>el.style.color = 'red'</code> 改行内样式。<code>el.classList.add('active')</code> 切 class 更推荐（配合 CSS）。",
-        questions:[
-          { q:"添加 CSS class？", code:"", opts:["el.class = 'active'","el.classList.add('active')","el.addClass('active')","el.className.add()"], ans:1, exp:"classList.add/remove/toggle。" },
-          { q:"隐藏元素（不占位）？", code:"", opts:["el.style.display='none'","el.style.visibility='hidden'","el.hide()","el.remove()"], ans:0, exp:"display:none 完全移除布局。" },
-          { q:"改行内颜色？", code:"", opts:["el.color='red'","el.style.color='red'","el.css('color','red')","el.setColor('red')"], ans:1, exp:"通过 el.style 修改行内样式。" }
-        ]},
-      { id:"d4", name:"表单与输入", enemy:"📝", bug:"表单守卫",
-        lesson:"<code>input.value</code> 获取输入值。form submit 事件里 e.preventDefault() 阻止刷新，用 JS 处理数据。",
-        questions:[
-          { q:"获取 input 的值？", code:"", opts:["input.text","input.content","input.value","input.innerHTML"], ans:2, exp:"表单元素用 .value。" },
-          { q:"阻止表单默认提交？", code:"", opts:["form.stop()","e.preventDefault()","form.prevent()","return null"], ans:1, exp:"在 submit 回调里 preventDefault。" },
-          { q:"checkbox 是否选中？", code:"", opts:["checkbox.checked","checkbox.selected","checkbox.value","checkbox.on"], ans:0, exp:".checked 返回 boolean。" }
-        ]},
-      { id:"d5", name:"DOM 综合", enemy:"🏰", bug:"交互堡垒", boss:true,
-        lesson:"localStorage 持久化存储。createElement + appendChild 动态创建节点。F12 Elements 面板实时查看 DOM 变化。",
-        questions:[
-          { q:"本地持久存储？", code:"", opts:["sessionStorage only","localStorage","cookie only","memory"], ans:1, exp:"localStorage 关闭浏览器仍在。" },
-          { q:"创建新 div？", code:"", opts:["document.create('div')","document.createElement('div')","new Div()","document.newElement('div')"], ans:1, exp:"createElement 动态创建节点。" },
-          { q:"F12 哪个面板看 DOM？", code:"", opts:["Console","Network","Elements","Sources"], ans:2, exp:"Elements = DOM 树，你的验收神器。" },
-          { q:"appendChild 作用？", code:"", opts:["删除子节点","添加子节点到末尾","替换节点","复制节点"], ans:1, exp:"把新元素插入父节点。" }
-        ]}
-    ]
-  },
-  {
-    id: "h5", icon:"🚀", name:"H5 现代frontend城",
-    desc:"Vue、路由、API、状态 — 你的 H5 八条目标",
-    planMap: "W2 全周 · H5八条目标毕业关",
-    levels: [
-      { id:"v1", name:"组件概念", enemy:"🧩", bug:"组件碎片",
-        lesson:"组件 = 可复用的 UI 块。Vue 单文件组件 .vue 含 template/script/style。props 传数据进组件，emit 向父组件发事件。",
-        questions:[
-          { q:"Vue 组件文件扩展名？", code:"", opts:[".vue",".component",".v",".jsx only"], ans:0, exp:".vue 单文件组件 SFC。" },
-          { q:"父传子数据用？", code:"", opts:["emit","props","store","router"], ans:1, exp:"props 父 → 子。" },
-          { q:"子通知父？", code:"", opts:["props","emit","callback only","ref"], ans:1, exp:"$emit / defineEmits。" }
-        ]},
-      { id:"v2", name:"路由", enemy:"🛤️", bug:"迷途指针",
-        lesson:"Vue Router 管理页面跳转而不刷新。<code>/home</code> → Home 组件，<code>/about</code> → About。router-link 导航，useRouter 编程式跳转。",
-        questions:[
-          { q:"Vue 路由库？", code:"", opts:["Vuex","Vue Router","Pinia","Vue Navigation"], ans:1, exp:"vue-router 官方路由。" },
-          { q:"声明式导航组件？", code:"", opts:["<a href>","<router-link>","<nav-link>","<route>"], ans:1, exp:"router-link 不刷新页面。" },
-          { q:"SPA 的含义？", code:"", opts:["单页应用","简单页面","静态页面","安全页面"], ans:0, exp:"Single Page Application，前端路由切换。" }
-        ]},
-      { id:"v3", name:"API 封装", enemy:"📡", bug:"通信干扰",
-        lesson:"把 fetch/axios 封装成 request 函数，统一 baseURL、token、错误处理。API 文件按模块划分：user.js、product.js。",
-        questions:[
-          { q:"HTTP 获取数据常用方法？", code:"", opts:["POST","GET","DELETE","PATCH"], ans:1, exp:"GET 读取，POST 创建/提交。" },
-          { q:"封装 request 的好处？", code:"", opts:["代码更长","统一处理token和错误","不需要","只能用于GET"], ans:1, exp:"DRY 原则，H5 项目标配。" },
-          { q:"401 状态码通常表示？", code:"", opts:["成功","未授权/未登录","服务器崩溃","找不到"], ans:1, exp:"需要登录或 token 过期。" }
-        ]},
-      { id:"v4", name:"状态管理", enemy:"💾", bug:"记忆吞噬者",
-        lesson:"Pinia/Vuex 管理全局状态（用户信息、购物车）。组件内用 ref/reactive 管理局部状态。computed 计算属性，watch 监听变化。",
-        questions:[
-          { q:"Vue3 推荐状态库？", code:"", opts:["Vuex only","Pinia","Redux","MobX"], ans:1, exp:"Pinia 是 Vue3 官方推荐。" },
-          { q:"响应式变量？", code:"", opts:["var","ref / reactive","static","global"], ans:1, exp:"ref 基本类型，reactive 对象。" },
-          { q:"computed 的作用？", code:"", opts:["监听变化","根据依赖自动计算的属性","发送请求","路由跳转"], ans:1, exp:"有缓存的计算属性。" }
-        ]},
-      { id:"v5", name:"H5 毕业关", enemy:"👑", bug:"终极 Boss", boss:true,
-        lesson:"🎓 <strong>恭喜来到最后一关！</strong>H5 核心理念：不必先系统学完所有语法——懂结构、写清需求、AI 实现、F12 验收。你已经掌握了全部核心知识！",
-        questions:[
-          { q:"H5 移动端必写 meta？", code:"", opts:["charset","viewport","keywords","author"], ans:1, exp:"viewport 适配手机。" },
-          { q:"Vant 是什么？", code:"", opts:["后端框架","Vue 移动端 UI 库","数据库","打包工具"], ans:1, exp:"Vant 常用 H5 组件库。" },
-          { q:"验收 H5 页面第一步？", code:"", opts:["直接上线","F12 + 手机模式预览","只看代码","问 AI"], ans:1, exp:"你的学习计划核心循环！" },
-          { q:"你的学习策略？", code:"", opts:["先背完整文档再写","懂需求→AI实现→浏览器验收","只复制不理解","跳过测试"], ans:1, exp:"这就是你的 H5 哲学 ✨" }
-        ]}
-    ]
-  }
-];
+<script src="game.js"></script>
 
-const SAVE_KEY = "frontend_quest_save_v1";
-const XP_PER_Q = 15;
-const XP_BOSS_BONUS = 30;
-const XP_PER_LEVEL = 100;
-
-/* ── 状态 ── */
-let state = loadState();
-let currentRegion = null;
-let currentLevel = null;
-let qIndex = 0;
-let enemyHp = 100;
-
-function defaultState() {
-  return { cleared: {}, xp: 0, lv: 1, totalCorrect: 0, totalAnswered: 0, startedAt: Date.now() };
-}
-
-function loadState() {
-  try {
-    const raw = localStorage.getItem(SAVE_KEY);
-    return raw ? { ...defaultState(), ...JSON.parse(raw) } : defaultState();
-  } catch { return defaultState(); }
-}
-
-function saveState() {
-  localStorage.setItem(SAVE_KEY, JSON.stringify(state));
-}
-
-function allLevels() {
-  const list = [];
-  REGIONS.forEach((r, ri) => r.levels.forEach((l, li) => list.push({ region: r, regionIdx: ri, level: l, levelIdx: li })));
-  return list;
-}
-
-function levelKey(ri, li) { return `${ri}-${li}`; }
-
-function isLevelUnlocked(ri, li) {
-  if (ri === 0 && li === 0) return true;
-  const all = allLevels();
-  const idx = all.findIndex(x => x.regionIdx === ri && x.levelIdx === li);
-  if (idx <= 0) return false;
-  const prev = all[idx - 1];
-  return !!state.cleared[levelKey(prev.regionIdx, prev.levelIdx)];
-}
-
-function isRegionUnlocked(ri) {
-  if (ri === 0) return true;
-  const prevRegion = REGIONS[ri - 1];
-  const lastLi = prevRegion.levels.length - 1;
-  return !!state.cleared[levelKey(ri - 1, lastLi)];
-}
-
-function countCleared() { return Object.keys(state.cleared).length; }
-function totalLevels() { return allLevels().length; }
-
-function addXp(n) {
-  state.xp += n;
-  while (state.xp >= XP_PER_LEVEL) {
-    state.xp -= XP_PER_LEVEL;
-    state.lv++;
-  }
-  saveState();
-}
-
-function showScreen(id) {
-  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-}
-
-function renderMap() {
-  const container = document.getElementById("map-container");
-  container.innerHTML = "";
-  REGIONS.forEach((region, ri) => {
-    const unlocked = isRegionUnlocked(ri);
-    const cleared = region.levels.filter((_, li) => state.cleared[levelKey(ri, li)]).length;
-    const div = document.createElement("div");
-    div.className = "region" + (unlocked ? " open" : " locked");
-    div.innerHTML = `
-      <div class="region-head" data-ri="${ri}">
-        <div class="region-icon">${region.icon}</div>
-        <div class="region-info">
-          <h2>${region.name}</h2>
-          <p>${region.desc} · ${region.planMap}</p>
-        </div>
-        <div class="region-progress">${cleared}/${region.levels.length}</div>
-      </div>
-      <div class="levels"></div>`;
-    const levelsEl = div.querySelector(".levels");
-    region.levels.forEach((lv, li) => {
-      const key = levelKey(ri, li);
-      const done = !!state.cleared[key];
-      const canPlay = unlocked && isLevelUnlocked(ri, li);
-      const isCurrent = canPlay && !done;
-      const btn = document.createElement("button");
-      btn.className = "level-btn" + (lv.boss ? " boss" : "") + (done ? " done" : "") + (isCurrent ? " current" : "");
-      btn.disabled = !canPlay;
-      btn.innerHTML = `<span class="num">${lv.boss ? "👑" : li + 1}</span><span>${done ? "✓" : lv.name.slice(0, 4)}</span>`;
-      btn.title = lv.name;
-      btn.onclick = () => startBattle(ri, li);
-      levelsEl.appendChild(btn);
-    });
-    div.querySelector(".region-head").onclick = () => {
-      if (unlocked) div.classList.toggle("open");
-    };
-    container.appendChild(div);
-  });
-
-  document.getElementById("player-lv").textContent = state.lv;
-  document.getElementById("xp-text").textContent = state.xp + " XP";
-  document.getElementById("xp-bar").style.width = (state.xp / XP_PER_LEVEL * 100) + "%";
-}
-
-function startBattle(ri, li) {
-  currentRegion = ri;
-  currentLevel = li;
-  qIndex = 0;
-  enemyHp = 100;
-  const lv = REGIONS[ri].levels[li];
-  document.getElementById("battle-title").textContent = REGIONS[ri].name + " · " + lv.name;
-  document.getElementById("enemy-sprite").textContent = lv.enemy;
-  document.getElementById("enemy-name").textContent = lv.bug;
-  document.getElementById("lesson-card").innerHTML = lv.lesson;
-  showScreen("screen-battle");
-  renderQuestion();
-}
-
-function renderQuestion() {
-  const lv = REGIONS[currentRegion].levels[currentLevel];
-  const q = lv.questions[qIndex];
-  document.getElementById("enemy-hp").style.width = enemyHp + "%";
-  document.getElementById("question-text").textContent = `第 ${qIndex + 1}/${lv.questions.length} 题：${q.q}`;
-  const codeEl = document.getElementById("code-display");
-  codeEl.innerHTML = q.code ? `<div class="code-block">${escHtml(q.code)}</div>` : "";
-  const optsEl = document.getElementById("options");
-  optsEl.innerHTML = "";
-  q.opts.forEach((opt, i) => {
-    const btn = document.createElement("button");
-    btn.className = "opt-btn";
-    btn.textContent = opt;
-    btn.onclick = () => answer(i, btn);
-    optsEl.appendChild(btn);
-  });
-  const fb = document.getElementById("feedback");
-  fb.className = "feedback";
-  fb.textContent = "";
-  document.getElementById("btn-next-q").style.display = "none";
-}
-
-function answer(chosen, btn) {
-  const lv = REGIONS[currentRegion].levels[currentLevel];
-  const q = lv.questions[qIndex];
-  const correct = chosen === q.ans;
-  state.totalAnswered++;
-  document.querySelectorAll(".opt-btn").forEach((b, i) => {
-    b.disabled = true;
-    if (i === q.ans) b.classList.add("correct");
-    else if (i === chosen) b.classList.add("wrong");
-  });
-  const fb = document.getElementById("feedback");
-  fb.classList.add("show", correct ? "ok" : "err");
-  fb.textContent = (correct ? "✅ 正确！" : "❌ 错误。") + " " + q.exp;
-
-  if (correct) {
-    state.totalCorrect++;
-    const dmg = Math.ceil(100 / lv.questions.length);
-    enemyHp = Math.max(0, enemyHp - dmg);
-    addXp(XP_PER_Q);
-    document.getElementById("enemy-hp").style.width = enemyHp + "%";
-  }
-
-  const nextBtn = document.getElementById("btn-next-q");
-  nextBtn.style.display = "inline-block";
-  nextBtn.onclick = () => {
-    qIndex++;
-    if (qIndex >= lv.questions.length) {
-      if (enemyHp <= 0 || state.totalCorrect >= lv.questions.length * 0.6) {
-        finishLevel();
-      } else {
-        qIndex = 0;
-        enemyHp = 100;
-        renderQuestion();
-      }
-    } else {
-      renderQuestion();
-    }
-  };
-}
-
-function finishLevel() {
-  const key = levelKey(currentRegion, currentLevel);
-  const lv = REGIONS[currentRegion].levels[currentLevel];
-  const firstClear = !state.cleared[key];
-  state.cleared[key] = Date.now();
-  if (firstClear && lv.boss) addXp(XP_BOSS_BONUS);
-  saveState();
-
-  const all = allLevels();
-  const total = countCleared();
-  const isFinal = total >= totalLevels();
-
-  document.getElementById("victory-emoji").textContent = isFinal ? "🏆" : (lv.boss ? "👑" : "🎉");
-  document.getElementById("victory-title").textContent = isFinal ? "前端冒险 · 全通关！" : "关卡完成！";
-  document.getElementById("victory-msg").innerHTML = isFinal
-    ? `<strong>恭喜毕业！</strong>你已掌握 HTML/CSS/JS/DOM/H5 全部核心知识。<br/>对应学习计划 W1-W2 前端部分已覆盖。<br/>接下来：打开真实 H5 项目，用 F12 验收 + AI 实现页面。`
-    : `击败了 <strong>${lv.bug}</strong>！获得 ${lv.questions.length * XP_PER_Q + (lv.boss && firstClear ? XP_BOSS_BONUS : 0)} XP<br/>进度：${total}/${totalLevels()} 关`;
-  document.getElementById("overlay-victory").classList.add("show");
-}
-
-function showReport() {
-  const total = totalLevels();
-  const cleared = countCleared();
-  const pct = Math.round(cleared / total * 100);
-  const accuracy = state.totalAnswered ? Math.round(state.totalCorrect / state.totalAnswered * 100) : 0;
-  document.getElementById("report-grid").innerHTML = `
-    <div class="report-item"><div class="val">${cleared}/${total}</div>关卡进度</div>
-    <div class="report-item"><div class="val">${pct}%</div>完成度</div>
-    <div class="report-item"><div class="val">Lv.${state.lv}</div>角色等级</div>
-    <div class="report-item"><div class="val">${accuracy}%</div>答题正确率</div>`;
-
-  const topics = REGIONS.map(r => {
-    const c = r.levels.filter((_, li) => state.cleared[levelKey(REGIONS.indexOf(r), li)]).length;
-    return `${r.icon} ${r.name}：${c}/${r.levels.length}`;
-  }).join("<br/>");
-
-  document.getElementById("report-detail").innerHTML = `
-    <strong>知识覆盖：</strong><br/>${topics}<br/><br/>
-    <strong>与学习计划对应：</strong><br/>
-    📄 HTML 森林 → W1 读码 D3-D4<br/>
-    🎨 CSS 峡谷 → W1 读码 D5-D6<br/>
-    ⚡ JS 火山 → W1-W2 JS 验收<br/>
-    🖱️ DOM 平原 → W2 F12 交互验收<br/>
-    🚀 H5 之城 → W2 八条目标全过<br/><br/>
-    ${pct >= 100 ? "🎓 <strong style='color:var(--ok)'>前端游戏课已毕业！</strong> 可以进入真实项目实战。" : "继续推进，每天 2-3 关即可，比看文档轻松多了。"}`;
-
-  document.getElementById("overlay-report").classList.add("show");
-}
-
-function escHtml(s) {
-  return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-}
-
-function updateStartScreen() {
-  const cleared = countCleared();
-  const stats = document.getElementById("start-stats");
-  const btnContinue = document.getElementById("btn-continue");
-  if (cleared > 0) {
-    stats.textContent = `已有进度：${cleared}/${totalLevels()} 关 · Lv.${state.lv}`;
-    btnContinue.style.display = "inline-block";
-  }
-}
-
-/* ── 事件绑定 ── */
-document.getElementById("btn-start").onclick = () => {
-  if (countCleared() === 0) { state.startedAt = Date.now(); saveState(); }
-  renderMap();
-  showScreen("screen-map");
-};
-document.getElementById("btn-continue").onclick = () => {
-  renderMap();
-  showScreen("screen-map");
-};
-document.getElementById("btn-back-map").onclick = () => { renderMap(); showScreen("screen-map"); };
-document.getElementById("btn-victory-ok").onclick = () => {
-  document.getElementById("overlay-victory").classList.remove("show");
-  renderMap();
-  showScreen("screen-map");
-};
-document.getElementById("btn-report").onclick = showReport;
-document.getElementById("btn-report-close").onclick = () => document.getElementById("overlay-report").classList.remove("show");
-document.getElementById("btn-reset").onclick = () => {
-  if (confirm("确定重置所有进度？")) {
-    state = defaultState();
-    saveState();
-    renderMap();
-    updateStartScreen();
-  }
-};
-
-updateStartScreen();
-</script>
 </body>
 </html>
