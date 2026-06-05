@@ -229,7 +229,7 @@ const REGIONS = [
 
 /* 每关追加 1 道代码填空（答错须重答） */
 const FILL_QUESTIONS = {
-  h1: { type:"fill", q:"补全：用段落标签包裹文字", code:"<___>你好世界</___>", answers:["p"], exp:"<p> 表示 paragraph 段落。" },
+  h1: { type:"fill", q:"补全：用段落标签包裹文字", code:"<___>你好世界</___>", answers:["p","p"], exp:"<p> 表示 paragraph 段落。" },
   h2: { type:"fill", q:"补全：超链接跳转地址属性", code:'<a ___="https://baidu.com">百度</a>', answers:["href"], exp:"href 指定链接目标 URL。" },
   h3: { type:"fill", q:"补全：无序列表外层标签", code:"<___>\n  <li>苹果</li>\n  <li>香蕉</li>\n</___>", answers:["ul","ul"], exp:"ul 包裹 li，成对出现。" },
   h4: { type:"fill", q:"补全：密码输入框类型", code:'<input type="___" />', answers:["password"], exp:"type=\"password\" 隐藏输入内容。" },
@@ -458,7 +458,9 @@ let currentRegion = null;
 let currentLevel = null;
 let qIndex = 0;
 let enemyHp = 100;
-let currentQuestionAnswered = false;
+const MAX_WRONG_HINT = 3;
+
+let questionWrongCount = 0;
 
 function defaultState() {
   return { cleared: {}, xp: 0, lv: 1, totalCorrect: 0, totalAnswered: 0, startedAt: Date.now() };
@@ -596,6 +598,7 @@ function beginBattle() {
   qIndex = 0;
   enemyHp = 100;
   currentQuestionAnswered = false;
+  questionWrongCount = 0;
   const lv = REGIONS[currentRegion].levels[currentLevel];
   document.getElementById("battle-title").textContent = REGIONS[currentRegion].name + " · " + lv.name;
   document.getElementById("enemy-sprite").textContent = lv.enemy;
@@ -607,18 +610,67 @@ function beginBattle() {
 
 function isFillQuestion(q) { return q.type === "fill"; }
 
+function countBlanks(code) {
+  return (code.match(/___/g) || []).length;
+}
+
+function getExpectedAnswers(q) {
+  const blankCount = countBlanks(q.code);
+  if (q.answers.length === blankCount) return q.answers;
+  if (q.answers.length === 1 && blankCount > 1) {
+    return Array(blankCount).fill(q.answers[0]);
+  }
+  return q.answers;
+}
+
 function normalizeFill(s) {
   return String(s || "").trim().replace(/\s+/g, " ").toLowerCase();
 }
 
-function checkFillAnswers(inputs, expected) {
-  if (inputs.length !== expected.length) return false;
+function checkFillAnswers(inputs, q) {
+  const answers = getExpectedAnswers(q);
+  if (inputs.length !== answers.length) return false;
   return inputs.every((val, i) => {
-    const exp = expected[i];
+    const exp = answers[i];
     const norm = normalizeFill(val);
     if (Array.isArray(exp)) return exp.some(e => normalizeFill(e) === norm);
     return normalizeFill(exp) === norm;
   });
+}
+
+function formatFillHint(q, expected) {
+  if (expected.length === 2 && expected[0] === expected[1] && q.code.includes("<___>")) {
+    return `<${expected[0]}>…</${expected[0]}>`;
+  }
+  return expected.join(" / ");
+}
+
+function revealCorrectAnswer(q) {
+  if (isFillQuestion(q)) {
+    const expected = getExpectedAnswers(q);
+    const inputs = [...document.querySelectorAll("#fill-wrap .fill-input")];
+    inputs.forEach((inp, i) => {
+      inp.value = expected[i] || "";
+      inp.classList.remove("wrong");
+      inp.classList.add("correct");
+      inp.disabled = true;
+    });
+    document.getElementById("btn-submit-fill").style.display = "none";
+    showRetryFeedback(
+      "💡 已错 " + MAX_WRONG_HINT + " 次，正确答案：" + formatFillHint(q, expected) + "。" + q.exp,
+      true
+    );
+  } else {
+    document.querySelectorAll(".opt-btn").forEach((b, i) => {
+      b.disabled = true;
+      if (i === q.ans) b.classList.add("correct");
+    });
+    showRetryFeedback(
+      "💡 已错 " + MAX_WRONG_HINT + " 次，正确答案：" + q.opts[q.ans] + "。" + q.exp,
+      true
+    );
+  }
+  onQuestionCorrect(q);
 }
 
 function renderQuestion() {
@@ -731,7 +783,15 @@ function answerChoice(chosen) {
     showRetryFeedback("✅ 正确！" + q.exp, true);
     onQuestionCorrect(q);
   } else {
-    showRetryFeedback("❌ 答错了，请重新作答。（本题答对才能进入下一题）", false);
+    questionWrongCount++;
+    if (questionWrongCount >= MAX_WRONG_HINT) {
+      revealCorrectAnswer(q);
+      return;
+    }
+    showRetryFeedback(
+      "❌ 答错了，请重新作答。（还剩 " + (MAX_WRONG_HINT - questionWrongCount) + " 次机会）",
+      false
+    );
     const nextBtn = document.getElementById("btn-next-q");
     nextBtn.style.display = "inline-block";
     nextBtn.textContent = "再答一次";
@@ -752,7 +812,8 @@ function submitFillAnswer() {
   }
 
   state.totalAnswered++;
-  const correct = checkFillAnswers(values, q.answers);
+  const expected = getExpectedAnswers(q);
+  const correct = checkFillAnswers(values, q);
   const submitBtn = document.getElementById("btn-submit-fill");
 
   if (correct) {
@@ -761,11 +822,19 @@ function submitFillAnswer() {
     showRetryFeedback("✅ 代码正确！" + q.exp, true);
     onQuestionCorrect(q);
   } else {
+    questionWrongCount++;
+    if (questionWrongCount >= MAX_WRONG_HINT) {
+      revealCorrectAnswer(q);
+      return;
+    }
     inputs.forEach(inp => {
       inp.classList.add("wrong");
       setTimeout(() => inp.classList.remove("wrong"), 400);
     });
-    showRetryFeedback("❌ 答案不对，请修改后重新提交。（填对才能过关）", false);
+    showRetryFeedback(
+      "❌ 答案不对，请修改后重新提交。（还剩 " + (MAX_WRONG_HINT - questionWrongCount) + " 次机会）",
+      false
+    );
     submitBtn.textContent = "重新提交";
   }
 }
@@ -773,6 +842,7 @@ function submitFillAnswer() {
 function advanceQuestion() {
   if (!currentQuestionAnswered) return;
   qIndex++;
+  questionWrongCount = 0;
   const lv = REGIONS[currentRegion].levels[currentLevel];
   if (qIndex >= lv.questions.length) {
     finishLevel();
